@@ -7,4 +7,4 @@ Created on Tue Sep 26 21:17:38 2023
 
 import dbFun
 
-dbFun.createDB()
+dbFun.create_db()
