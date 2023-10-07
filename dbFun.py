@@ -185,17 +185,22 @@ def get_trips(cust_id):
     return results
 
 
+def get_vehicleInfo(vehicle_id):
+    table_name = "vehicleInfo_" + str(vehicle_id)
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT * FROM " + table_name
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result
+
+
 def get_vehicleInfos():
     vehicle_num = get_num("vehicles")
     results = {}
     for vehicle_id in range(1, vehicle_num + 1):
-        table_name = "vehicleInfo_" + str(vehicle_id)
-        with sqlite3.connect("ShareBikeDB.db") as db:
-            cursor = db.cursor()
-            sql = "SELECT * FROM " + table_name
-            cursor.execute(sql)
-            results[vehicle_id] = cursor.fetchall()
-        db.close()
+        results[vehicle_id] = get_vehicleInfo(vehicle_id)
     return results
 
 
@@ -205,4 +210,15 @@ def get_num(table_name):
         sql = "SELECT COUNT() FROM {}".format(table_name)
         cursor.execute(sql)
         result = cursor.fetchall()
-        return result[0][0]
+    db.close()
+    return result[0][0]
+
+
+def get_loc_name(location_id):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT station_name, postcode FROM locations WHERE location_id = \"{}\"".format(location_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result
