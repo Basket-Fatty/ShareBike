@@ -2,26 +2,47 @@ import pandas as pd
 import dbFun
 import enum_values
 
-
-def rent(vehicle_id, time, status, location_id, cust_id):
-    # create new vehicleInfo, add it to the table
-    status = enum_values.Status.RENTED
-    dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
-
-    # create new trip, add it to the table
-    dbFun.start_trip(cust_id, vehicle_id, time, location_id)
+charge_policy = {"Bike": 1.0, "E-Bike": 2.0}
 
 
-def returnBike(vehicle_id, time, status, location_id, cust_id):
-    # create new vehicleInfo, add it to the table
-    status = enum_values.Status.VACANT
-    dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+def rent(vehicle_id, time, location_id, cust_id):
+    status = dbFun.check_status(vehicle_id)
 
-    # calculate the charge
-    charge = 0
+    if status == enum_values.Status.VACANT.value:
+        # create new vehicleInfo, add it to the table
+        status = enum_values.Status.RENTED.value
+        dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+        # create new trip, add it to the table
+        dbFun.start_trip(cust_id, vehicle_id, time, location_id)
 
-    # create new trip, add it to the table
-    dbFun.end_trip(cust_id, time, location_id, charge)
+        return True
+    else:
+        return False
+
+
+def returnBike(vehicle_id, time, location_id, cust_id):
+    status = dbFun.check_status(vehicle_id)
+
+    if status == enum_values.Status.RENTED.value:
+        start_time = dbFun.get_time(vehicle_id)
+        end_time = time
+        vehicle_type = dbFun.get_type(vehicle_id)
+
+        # create new vehicleInfo, add it to the table
+        status = enum_values.Status.VACANT.value
+        dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+
+        # calculate the charge
+        charge = (end_time - start_time) * charge_policy.get(vehicle_type)
+        balance = dbFun.get_balance(cust_id)
+        dbFun.update_balance(cust_id, balance - charge)
+
+        # create new trip, add it to the table
+        dbFun.end_trip(cust_id, time, location_id, charge)
+
+        return True
+    else:
+        return False
 
 
 def report(vehicle_id, time, status, location_id):
@@ -29,13 +50,14 @@ def report(vehicle_id, time, status, location_id):
     dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
 
 
-def pay():
-    return
+def pay(cust_id, amount):
+    balance = dbFun.get_balance(cust_id)
+    dbFun.update_balance(cust_id, balance + amount)
 
 
 # return a list of series containing all trips of a customer
 # print(result[0])
-
+#
 # trip_id                         1.0
 # vehicle_id                      1.0
 # start_time                     12.0

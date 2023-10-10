@@ -30,7 +30,7 @@ def report_single(vehicle_id):
 # values are lists of series containing all infos of corresponding vehicles
 # results[1][0], [1] represents for vehicle1, [0]represents for first info of vehicle1
 # print(results[1][0])
-
+#
 # info_id                     1
 # time                        1
 # status                 RENTED
@@ -53,3 +53,4 @@ def report_all():
             result.append(series)
         results[item[0]] = result
     return results
+
