@@ -222,6 +222,16 @@ def get_num(table_name):
     return result[0][0]
 
 
+def get_locations():
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT * FROM locations"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result
+
+
 def get_loc_name(location_id):
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()

@@ -54,9 +54,18 @@
         station_name    station_name1
         postcode            postcode1
 
-
-
     report_all()---get all the travel information of all vehicles
+    return a dictonary, the keys are vehilce id, values are lists of series of travel information
+
+        report_all()[1][0]---the first travel information of vehicle1
+
+        info_id                     1
+        time                        1
+        status                 RENTED
+        station_name    station_name1
+        postcode            postcode1
+
+    report_period(start_time, end_time)---get the travel information of all vehicles during a period of time
     return a dictonary, the keys are vehilce id, values are lists of series of travel information
 
         report_all()[1][0]---the first travel information of vehicle1
@@ -71,6 +80,15 @@
 
     when change status of vehicles, make sure to use enum_values.Status.STATUS.value
 
+    get_locations()---get all the locations
+    return a list of series of information of locations
+
+        get_locations()[0]
+
+        location_id                 1
+        station_name    station_name1
+        postcode            postcode1
+
     track()---get all the latest information of all vehicles
     return a dictionary, keys are vehicle ids, values are a series of information
 
@@ -82,7 +100,29 @@
         station_name    station_name2
         postcode            postcode2
 
+    track_charge()---get all the latest information of  vehicles which are low power
+    return a dictionary, keys are vehicle ids, values are a series of information
+
+        track()[1]---the latest information of vehicle1
+
+        info_id                     3
+        time                       12
+        status               LOWPOWER
+        station_name    station_name2
+        postcode            postcode2
+
     charge(vehicle_id, time, location_id)---if success return True, else return False
+
+    track_repair()---get all the latest information of  vehicles which are broken
+    return a dictionary, keys are vehicle ids, values are a series of information
+
+        track()[1]---the latest information of vehicle1
+
+        info_id                     3
+        time                       12
+        status               LOWPOWER
+        station_name    station_name2
+        postcode            postcode2
 
     repair(vehicle_id, time, location_id)---if success return True, else return False
 

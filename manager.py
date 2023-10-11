@@ -55,6 +55,15 @@ def report_all():
     return results
 
 
+# report_period(start_time, end_time)---get the travel information of all vehicles during a period of time
+# return a dictonary, the keys are vehilce id, values are lists of series of travel information
+# report_all()[1][0]---the first travel information of vehicle1
+
+# info_id                     1
+# time                        1
+# status                 RENTED
+# station_name    station_name1
+# postcode            postcode1
 def report_period(start_time, end_time):
     data = report_all()
     results = {}

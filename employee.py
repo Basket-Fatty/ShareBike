@@ -4,6 +4,15 @@ import pandas as pd
 import enum_values
 
 
+def get_locations():
+    data = dbFun.get_locations()
+    result = []
+    for item in data:
+        series = pd.Series(item, index=["location_id", "station_name", "postcode"])
+        result.append(series)
+    return result
+
+
 def track():
     # {1: (3, 12, 'LOWPOWER', 2),
     # 2: (3, 12, 'LOWPOWER', 2),
