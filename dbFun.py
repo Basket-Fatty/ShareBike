@@ -222,3 +222,12 @@ def get_loc_name(location_id):
         result = cursor.fetchall()
     db.close()
     return result
+
+def get_all_loc():
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT * FROM locations"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result
