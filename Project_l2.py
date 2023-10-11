@@ -1,13 +1,14 @@
 from tkinter import *
-import math,numpy
+import math, numpy
 import matplotlib.pyplot as plt
 
 
 def _from_rgb(rgb):
     return "#%02x%02x%02x" % rgb
 
+
 def operator_page():
-    lbl = Label(text="Manager Reports", font=('Arial','20'))
+    lbl = Label(text="Manager Reports", font=('Arial', '20'))
     lbl.place(x=140, y=200)
     lbl["bg"] = bg_colour
     lbl["fg"] = "white"
@@ -33,11 +34,12 @@ def daily_earnings_report():
 def location_wise_report():
     locations = ["Location1", "Location 2", "Location 3"]
     visits = [50, 80, 90]
-    color = ["blue","green","yellow"]
+    color = ["blue", "green", "yellow"]
     plt.title("Location wise visits")
     plt.pie(visits, labels=locations, colors=color, shadow=True, autopct='%1.1f%%')
     plt.axis('equal')
     plt.show()
+
 
 bg_colour = _from_rgb((226, 97, 233))
 window = Tk()
@@ -46,9 +48,8 @@ window.geometry("500x700")
 window.configure(background=bg_colour)
 
 logo = PhotoImage(file="bike_logo.png")
-logoimg = Label(bg=bg_colour, image = logo)
-logoimg.place(x = 150, y = 20, width = 200, height = 150)
-
+logoimg = Label(bg=bg_colour, image=logo)
+logoimg.place(x=150, y=20, width=200, height=150)
 
 operator_page()
 window.mainloop()

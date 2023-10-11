@@ -1,7 +1,7 @@
 
 from tkinter import *
 from tkinter import messagebox, StringVar, OptionMenu
-import employee as emp
+import data_manipulation as dm
 
 
 def _from_rgb(rgb):
@@ -118,14 +118,14 @@ def move_vehicle():
 
 
 def populate_vehicle_status(name_box):
-    vehicle_dtls = emp.track_vehicle()
+    vehicle_dtls = dm.track_vehicle()
     for vehicle_id, vehicle_dtls in vehicle_dtls.items():
         total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
         name_box.insert(END, total_info)
 
 
 def populate_discharged_vehicle(name_box):
-    vehicle_dtls = emp.track_vehicle()
+    vehicle_dtls = dm.track_vehicle()
     for vehicle_id, vehicle_dtls in vehicle_dtls.items():
         if vehicle_dtls[2] == 'LOWPOWER':
             total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
@@ -133,7 +133,7 @@ def populate_discharged_vehicle(name_box):
 
 
 def populate_damaged_vehicle(name_box):
-    vehicle_dtls = emp.track_vehicle()
+    vehicle_dtls = dm.track_vehicle()
     for vehicle_id, vehicle_dtls in vehicle_dtls.items():
         if vehicle_dtls[2] == 'DAMAGED':
             total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
@@ -141,7 +141,7 @@ def populate_damaged_vehicle(name_box):
 
 
 def populate_move_vehicle(name_box):
-    vehicle_dtls = emp.track_vehicle()
+    vehicle_dtls = dm.track_vehicle()
     for vehicle_id, vehicle_dtls in vehicle_dtls.items():
         if vehicle_dtls[2] == 'VACANT':
             total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
@@ -155,7 +155,7 @@ def populate_dropdown(name_box, move_vehicle_window):
     print(name_box.get(selection[0]))
     fetched_string_array = name_box.get(selection[0]).split("---")
     current_location = fetched_string_array[1]
-    location_dct = emp.fetch_all_location_info_in_dict()
+    location_dct = dm.fetch_all_location_info_in_dict()
     filtered_location = []
     for key, value in location_dct.items():
         if value != current_location:
@@ -172,10 +172,10 @@ def charge_button(name_box):
     print(name_box)
     fetched_string_array = name_box.get(selection[0]).split("---")
     vehicle_id = fetched_string_array[0]
-    location_dct = emp.fetch_all_location_info_in_dict()
+    location_dct = dm.fetch_all_location_info_in_dict()
     location = find_location_id(location_dct, fetched_string_array[1])
     time = 100
-    emp.update_vehicle_charge(vehicle_id, time, "VACANT", location)
+    dm.update_vehicle_charge(vehicle_id, time, "VACANT", location)
     messagebox.showinfo("Vehicle Charged", vehicle_id + " has been charged")
 
 
@@ -183,10 +183,10 @@ def repair_button(name_box):
     selection = name_box.curselection()
     fetched_string_array = name_box.get(selection[0]).split("---")
     vehicle_id = fetched_string_array[0]
-    location_dct = emp.fetch_all_location_info_in_dict()
+    location_dct = dm.fetch_all_location_info_in_dict()
     location = find_location_id(location_dct, fetched_string_array[1])
     time = 100
-    emp.update_vehicle_charge(vehicle_id, time, "VACANT", location)
+    dm.update_vehicle_charge(vehicle_id, time, "VACANT", location)
     messagebox.showinfo("Vehicle Charged", vehicle_id + " has been repaired")
 
 
@@ -195,10 +195,10 @@ def move_button(name_box, optionbox_selection):
     selection = name_box.curselection()
     fetched_string_array = name_box.get(selection[0]).split("---")
     vehicle_id = fetched_string_array[0]
-    location_dct = emp.fetch_all_location_info_in_dict()
+    location_dct = dm.fetch_all_location_info_in_dict()
     location = find_location_id(location_dct, fetched_string_array[1])
     time = 100
-    emp.update_vehicle_charge(vehicle_id, time, "VACANT", selected_location)
+    dm.update_vehicle_charge(vehicle_id, time, "VACANT", selected_location)
     messagebox.showinfo("Vehicle location changed", "Vehicle "+ name_box.get(selection[0]) + " to " + selected_location)
 
 
