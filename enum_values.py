@@ -12,3 +12,4 @@ class UserType(Enum):
     MANAGER = "manager"
     OPERATOR = "operator"
     CUSTOMER = "customer"
+

@@ -7,6 +7,8 @@ Created on Tue Sep 26 18:47:06 2023
 
 import sqlite3
 
+import enum_values
+
 
 def create_db():
     with sqlite3.connect("ShareBikeDB.db") as db:
@@ -95,7 +97,7 @@ def create_customer(password, fname, lname, email, phnum, bank_acc_nbr):
     db.close()
 
 
-def create_vehicle(vehicle_type):
+def create_vehicle(vehicle_type, time, location_id):
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
         # sql = "INSERT INTO vehicles(vehicle_type) VALUES (%(vehicle_type)s)"
@@ -116,6 +118,12 @@ def create_vehicle(vehicle_type):
             status      TEXT,
             location_id INTEGER REFERENCES locations (location_id) 
         );""")
+
+        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\",\"{}\",\"{}\")".format(time,
+                                                                                                               enum_values.Status.VACANT.value,
+                                                                                                               location_id)
+        cursor.execute(sql)
+        db.commit()
     db.close()
 
 
@@ -223,11 +231,60 @@ def get_loc_name(location_id):
     db.close()
     return result
 
-def get_all_loc():
+
+def check_status(vehicle_id):
+    table_name = "vehicleInfo_" + str(vehicle_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
-        sql = "SELECT * FROM locations"
+        sql = "SELECT status FROM " + table_name + " WHERE info_id = (SELECT MAX(info_id) FROM " + table_name + ")"
         cursor.execute(sql)
         result = cursor.fetchall()
     db.close()
-    return result
+    return result[0][0]
+
+
+def get_balance(cust_id):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT balance FROM customers WHERE cust_id = \"{}\"".format(cust_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return float(result[0][0])
+
+
+def update_balance(cust_id, balance):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "UPDATE customers SET balance = \"{}\" WHERE cust_id = \"{}\"".format(balance, cust_id)
+        cursor.execute(sql)
+    db.close()
+
+
+def get_time(vehicle_id):
+    table_name = "vehicleInfo_" + str(vehicle_id)
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT time FROM " + table_name + " WHERE info_id = (SELECT MAX(info_id) FROM " + table_name + ")"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result[0][0]
+
+
+def get_type(vehicle_id):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT vehicle_type FROM vehicles WHERE vehicle_id = \"{}\"".format(vehicle_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result[0][0]
+
+
+def get_latest_vehicleInfos():
+    vehicle_num = get_num("vehicles")
+    results = {}
+    for vehicle_id in range(1, vehicle_num + 1):
+        results[vehicle_id] = get_vehicleInfo(vehicle_id)[-1]
+    return results

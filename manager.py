@@ -30,7 +30,7 @@ def report_single(vehicle_id):
 # values are lists of series containing all infos of corresponding vehicles
 # results[1][0], [1] represents for vehicle1, [0]represents for first info of vehicle1
 # print(results[1][0])
-
+#
 # info_id                     1
 # time                        1
 # status                 RENTED
@@ -51,5 +51,17 @@ def report_all():
             series = series.drop("location_id")
 
             result.append(series)
+        results[item[0]] = result
+    return results
+
+
+def report_period(start_time, end_time):
+    data = report_all()
+    results = {}
+    for item in data.items():
+        result = []
+        for info in item[1]:
+            if (float(info["time"]) >= start_time) & (float(info["time"]) <= end_time):
+                result.append(info)
         results[item[0]] = result
     return results
