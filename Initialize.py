@@ -49,9 +49,19 @@ for item in data.items():
     print(item[1])
 
 print()
-# manager check all the infomation of all vehicles
+# manager check all the information of all vehicles
 print("manager report:")
 data = manager.report_all()
+for item in data.items():
+    print("vehicle" + str(item[0]))
+    for element in item[1]:
+        print(element)
+    print()
+
+print()
+# manager check the information of all vehicles during a period
+print("manager period report:")
+data = manager.report_period(12, 15)
 for item in data.items():
     print("vehicle" + str(item[0]))
     for element in item[1]:

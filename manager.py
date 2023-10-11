@@ -54,3 +54,14 @@ def report_all():
         results[item[0]] = result
     return results
 
+
+def report_period(start_time, end_time):
+    data = report_all()
+    results = {}
+    for item in data.items():
+        result = []
+        for info in item[1]:
+            if (float(info["time"]) >= start_time) & (float(info["time"]) <= end_time):
+                result.append(info)
+        results[item[0]] = result
+    return results
