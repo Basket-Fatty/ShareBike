@@ -1,18 +1,11 @@
+
 from tkinter import *
-import random
-from tkinter import messagebox
+from tkinter import messagebox, StringVar, OptionMenu
+import employee as emp
 
 
 def _from_rgb(rgb):
     return "#%02x%02x%02x" % rgb
-
-
-def gen_random():
-    global rnd1, rnd2
-    rnd1 = random.randrange(10,50)
-    rnd2 = random.randrange(10,50)
-    strn = "Enter the sum of " + str(rnd1) + " and " + str(rnd2)
-    return strn
 
 
 def operator_page():
@@ -33,7 +26,7 @@ def operator_page():
     btn = Button(text="Repair Defective Vehicle", command=repair_vehicle)
     btn.place(x=210, y=330)
     btn["bg"] = "blue"
-    btn = Button(text="Move a Vehicle", command=repair_vehicle)
+    btn = Button(text="Move a Vehicle", command=move_vehicle)
     btn.place(x=210, y=360)
     btn["bg"] = "blue"
 
@@ -88,7 +81,7 @@ def repair_vehicle():
     lbl.place(x=10,y=30)
     lbl["bg"] = bg_colour
     lbl["fg"] = "white"
-    lbl = Label(repair_vehicle_window, text="Vehicle Number Broken down", font=('Arial', '10'))
+    lbl = Label(repair_vehicle_window, text="Vehicle Number Broken down --- location", font=('Arial', '10'))
     lbl.place(x=10, y=60)
     lbl["bg"] = bg_colour
     lbl["fg"] = "black"
@@ -101,37 +94,118 @@ def repair_vehicle():
     repair_vehicle_window.mainloop()
 
 
+def move_vehicle():
+    move_vehicle_window = Tk()
+    move_vehicle_window.title("Move Vehicle")
+    move_vehicle_window.geometry("500x400")
+    move_vehicle_window.configure(background=bg_colour)
+    lbl = Label(move_vehicle_window, text="Please select a Vehicle to move", font=('Arial', '15'))
+    lbl.place(x=10,y=30)
+    lbl["bg"] = bg_colour
+    lbl["fg"] = "white"
+    lbl = Label(move_vehicle_window, text="Vehicle Number --- Current location", font=('Arial', '10'))
+    lbl.place(x=10, y=60)
+    lbl["bg"] = bg_colour
+    lbl["fg"] = "black"
+    name_box = Listbox(move_vehicle_window)
+    name_box.place(x=10, y=90, width=250, height=80)
+    populate_move_vehicle(name_box)
+    selected = populate_dropdown(name_box, move_vehicle_window)
+    btn = Button(move_vehicle_window, text="Move Vehicle", command=lambda: move_button(name_box, selected))
+    btn.place(x=10, y=240)
+    btn["bg"] = "blue"
+    move_vehicle_window.mainloop()
+
+
 def populate_vehicle_status(name_box):
-    vehicle_dtl = ["VH123","TR333","TY4444"]
-    location = ["Street1","Street2","Street3"]
-    for i,j in zip(vehicle_dtl, location):
-        str = i + "---" + j + '\n'
-        name_box.insert(END,str)
+    vehicle_dtls = emp.track_vehicle()
+    for vehicle_id, vehicle_dtls in vehicle_dtls.items():
+        total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
+        name_box.insert(END, total_info)
 
 
 def populate_discharged_vehicle(name_box):
-    vehicle_dtl = ["VH123","TR333","TY4444"]
-    for i in vehicle_dtl:
-        str = i + '\n'
-        name_box.insert(END,str)
+    vehicle_dtls = emp.track_vehicle()
+    for vehicle_id, vehicle_dtls in vehicle_dtls.items():
+        if vehicle_dtls[2] == 'LOWPOWER':
+            total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
+            name_box.insert(END, total_info)
 
 
 def populate_damaged_vehicle(name_box):
-    vehicle_dtl = ["VH123","TR333","TY4444"]
-    for i in vehicle_dtl:
-        str = i + '\n'
-        name_box.insert(END,str)
+    vehicle_dtls = emp.track_vehicle()
+    for vehicle_id, vehicle_dtls in vehicle_dtls.items():
+        if vehicle_dtls[2] == 'DAMAGED':
+            total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
+            name_box.insert(END, total_info)
+
+
+def populate_move_vehicle(name_box):
+    vehicle_dtls = emp.track_vehicle()
+    for vehicle_id, vehicle_dtls in vehicle_dtls.items():
+        if vehicle_dtls[2] == 'VACANT':
+            total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
+            name_box.insert(END, total_info)
+    name_box.select_set(0)
+
+
+def populate_dropdown(name_box, move_vehicle_window):
+    selection = name_box.curselection()
+    print(selection)
+    print(name_box.get(selection[0]))
+    fetched_string_array = name_box.get(selection[0]).split("---")
+    current_location = fetched_string_array[1]
+    location_dct = emp.fetch_all_location_info_in_dict()
+    filtered_location = []
+    for key, value in location_dct.items():
+        if value != current_location:
+            filtered_location.append(value)
+    clicked = StringVar(move_vehicle_window)
+    clicked.set("Select Location")
+    drop = OptionMenu(move_vehicle_window, clicked, *filtered_location)
+    drop.place(x=10, y=200, width="150")
+    return clicked
 
 
 def charge_button(name_box):
     selection = name_box.curselection()
-    messagebox.showinfo("Vehicle Charged", name_box.get(selection[0]) + " has been charged")
+    print(name_box)
+    fetched_string_array = name_box.get(selection[0]).split("---")
+    vehicle_id = fetched_string_array[0]
+    location_dct = emp.fetch_all_location_info_in_dict()
+    location = find_location_id(location_dct, fetched_string_array[1])
+    time = 100
+    emp.update_vehicle_charge(vehicle_id, time, "VACANT", location)
+    messagebox.showinfo("Vehicle Charged", vehicle_id + " has been charged")
 
 
 def repair_button(name_box):
     selection = name_box.curselection()
-    messagebox.showinfo("Vehicle Repaired", name_box.get(selection[0]) + " has been repaired")
+    fetched_string_array = name_box.get(selection[0]).split("---")
+    vehicle_id = fetched_string_array[0]
+    location_dct = emp.fetch_all_location_info_in_dict()
+    location = find_location_id(location_dct, fetched_string_array[1])
+    time = 100
+    emp.update_vehicle_charge(vehicle_id, time, "VACANT", location)
+    messagebox.showinfo("Vehicle Charged", vehicle_id + " has been repaired")
 
+
+def move_button(name_box, optionbox_selection):
+    selected_location = optionbox_selection.get()
+    selection = name_box.curselection()
+    fetched_string_array = name_box.get(selection[0]).split("---")
+    vehicle_id = fetched_string_array[0]
+    location_dct = emp.fetch_all_location_info_in_dict()
+    location = find_location_id(location_dct, fetched_string_array[1])
+    time = 100
+    emp.update_vehicle_charge(vehicle_id, time, "VACANT", selected_location)
+    messagebox.showinfo("Vehicle location changed", "Vehicle "+ name_box.get(selection[0]) + " to " + selected_location)
+
+
+def find_location_id(location_dct, to_match):
+    for key, value in location_dct.items():
+        if value == to_match:
+            return key
 
 
 bg_colour = _from_rgb((226, 97, 233))
