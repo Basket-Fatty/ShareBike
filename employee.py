@@ -23,6 +23,15 @@ def track():
     return result
 
 
+def track_charge():
+    data = track()
+    result = {}
+    for items in data.items():
+        if items[1]["status"] == enum_values.Status.LOWPOWER.value:
+            result[items[0]] = items[1]
+    return result
+
+
 def charge(vehicle_id, time, location_id):
     status = dbFun.check_status(vehicle_id)
 
@@ -34,6 +43,15 @@ def charge(vehicle_id, time, location_id):
         return True
     else:
         return False
+
+
+def track_repair():
+    data = track()
+    result = {}
+    for items in data.items():
+        if items[1]["status"] == enum_values.Status.BROKEN.value:
+            result[items[0]] = items[1]
+    return result
 
 
 def repair(vehicle_id, time, location_id):
@@ -53,4 +71,3 @@ def move(vehicle_id, time, location_id):
     status = enum_values.Status.VACANT.value
     # create new vehicleInfo, add it to the table
     dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
-
