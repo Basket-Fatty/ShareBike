@@ -242,6 +242,16 @@ def get_loc_name(location_id):
     return result
 
 
+def get_loc_id(station_name):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT location_id FROM locations WHERE station_name = \"{}\"".format(station_name)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result[0][0]
+
+
 def check_status(vehicle_id):
     table_name = "vehicleInfo_" + str(vehicle_id)
     with sqlite3.connect("ShareBikeDB.db") as db:

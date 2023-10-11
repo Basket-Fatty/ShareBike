@@ -80,3 +80,10 @@ def move(vehicle_id, time, location_id):
     status = enum_values.Status.VACANT.value
     # create new vehicleInfo, add it to the table
     dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+
+
+def move_with_name(vehicle_id, time, station_name):
+    status = enum_values.Status.VACANT.value
+    location_id = dbFun.get_loc_id(station_name)
+    # create new vehicleInfo, add it to the table
+    dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)

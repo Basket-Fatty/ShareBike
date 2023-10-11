@@ -126,4 +126,6 @@
 
     repair(vehicle_id, time, location_id)---if success return True, else return False
 
-    move(vehicle_id, time, location_id)
+    move(vehicle_id, time, location_id)---move vehicles to location_id
+
+    move_with_name(vehicle_id, time, station_name)---move vehicles to station_name
