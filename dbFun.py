@@ -308,3 +308,13 @@ def get_latest_vehicleInfos():
     for vehicle_id in range(1, vehicle_num + 1):
         results[vehicle_id] = get_vehicleInfo(vehicle_id)[-1]
     return results
+
+
+def get_profile(cust_id):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT * FROM customers WHERE cust_id = \"{}\"".format(cust_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result[0]

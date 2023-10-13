@@ -86,3 +86,9 @@ def history(cust_id):
         series = series.drop('end_location_id')
         result.append(series)
     return result
+
+
+def view_profile(cust_id):
+    data = dbFun.get_profile(cust_id)
+    series = pd.Series(data, index=["cust_id", "bank_acc_nbr", "balance", "password", "fname", "lname", "email", "phnum"])
+    return series
