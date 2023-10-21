@@ -121,7 +121,7 @@ def pay_button(cust_id_box, amount_box):
 
 
 # initialization
-root = tk.Tk()
+root = tk.Toplevel()
 root.title('ShareBike | Pay - Customer')
 # root.eval("tk::PlaceWindow . center")
 # taking the half of whatever screen this code would be running on

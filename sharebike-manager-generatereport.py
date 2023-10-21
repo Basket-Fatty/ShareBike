@@ -114,7 +114,7 @@ def view_report_button(start_time_box, end_time_box):
 
 
 # initialization
-root = tk.Tk()
+root = tk.Toplevel()
 root.title('ShareBike | Generate Report - Manager')
 # root.eval("tk::PlaceWindow . center")
 # taking the half of whatever screen this code would be running on

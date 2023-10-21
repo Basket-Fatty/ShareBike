@@ -141,7 +141,7 @@ def view_report_button(vehicle_id_box, time_box, status_box, location_id_box):
 
 
 # initialization
-root = tk.Tk()
+root = tk.Toplevel()
 root.title('ShareBike | Report - Customer')
 # root.eval("tk::PlaceWindow . center")
 # taking the half of whatever screen this code would be running on
