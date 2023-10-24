@@ -1,6 +1,6 @@
 import dbFun
 import pandas as pd
-
+import time
 import enum_values
 
 
@@ -28,6 +28,10 @@ def track():
         series['postcode'] = location[0][1]
         series = series.drop("location_id")
 
+        time_stamp = series['time']
+        time_str = time.strftime("%Y-%m-%d %H:%M", time.localtime(time_stamp))
+        series['time'] = time_str
+
         result[item[0]] = series
     return result
 
@@ -41,13 +45,13 @@ def track_charge():
     return result
 
 
-def charge(vehicle_id, time, location_id):
+def charge(vehicle_id, location_id):
     status = dbFun.check_status(vehicle_id)
 
     if status == enum_values.Status.LOWPOWER.value:
         status = enum_values.Status.VACANT.value
         # create new vehicleInfo, add it to the table
-        dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+        dbFun.insert_vehicleInfo(vehicle_id, status, location_id)
 
         return True
     else:
@@ -63,27 +67,27 @@ def track_repair():
     return result
 
 
-def repair(vehicle_id, time, location_id):
+def repair(vehicle_id, location_id):
     status = dbFun.check_status(vehicle_id)
 
     if status == enum_values.Status.BROKEN.value:
         status = enum_values.Status.VACANT.value
         # create new vehicleInfo, add it to the table
-        dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+        dbFun.insert_vehicleInfo(vehicle_id, status, location_id)
 
         return True
     else:
         return False
 
 
-def move(vehicle_id, time, location_id):
+def move(vehicle_id, location_id):
     status = enum_values.Status.VACANT.value
     # create new vehicleInfo, add it to the table
-    dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+    dbFun.insert_vehicleInfo(vehicle_id, status, location_id)
 
 
-def move_with_name(vehicle_id, time, station_name):
+def move_with_name(vehicle_id, station_name):
     status = enum_values.Status.VACANT.value
     location_id = dbFun.get_loc_id(station_name)
     # create new vehicleInfo, add it to the table
-    dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+    dbFun.insert_vehicleInfo(vehicle_id, status, location_id)

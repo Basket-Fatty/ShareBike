@@ -1,5 +1,6 @@
 import pandas as pd
 import dbFun
+import time
 
 
 # return a list of series containing all infos of a vehicle
@@ -21,6 +22,10 @@ def report_single(vehicle_id):
         series['station_name'] = location[0][0]
         series['postcode'] = location[0][1]
         series = series.drop("location_id")
+
+        time_stamp = series['time']
+        time_str = time.strftime("%Y-%m-%d %H:%M", time.localtime(time_stamp))
+        series['time'] = time_str
 
         result.append(series)
     return result
@@ -50,6 +55,10 @@ def report_all():
             series['postcode'] = location[0][1]
             series = series.drop("location_id")
 
+            time_stamp = series['time']
+            time_str = time.strftime("%Y-%m-%d %H:%M", time.localtime(time_stamp))
+            series['time'] = time_str
+
             result.append(series)
         results[item[0]] = result
     return results
@@ -65,12 +74,15 @@ def report_all():
 # station_name    station_name1
 # postcode            postcode1
 def report_period(start_time, end_time):
+    start_time_stamp = time.mktime(time.strptime(start_time, "%Y-%m-%d %H:%M"))
+    end_time_stamp = time.mktime(time.strptime(end_time, "%Y-%m-%d %H:%M"))
     data = report_all()
     results = {}
     for item in data.items():
         result = []
         for info in item[1]:
-            if (float(info["time"]) >= start_time) & (float(info["time"]) <= end_time):
+            time_stamp = time.mktime(time.strptime(info["time"], "%Y-%m-%d %H:%M"))
+            if (time_stamp >= start_time_stamp) & (time_stamp <= end_time_stamp):
                 result.append(info)
         results[item[0]] = result
     return results

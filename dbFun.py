@@ -6,6 +6,7 @@ Created on Tue Sep 26 18:47:06 2023
 """
 
 import sqlite3
+import time
 
 import enum_values
 
@@ -88,16 +89,17 @@ def create_customer(password, fname, lname, email, phnum, bank_acc_nbr):
                               UNIQUE
                               NOT NULL,
             vehicle_id        INTEGER REFERENCES vehicles (vehicle_id),
-            start_time        INTEGER,
+            start_time        REAL,
             start_location_id INTEGER REFERENCES locations (location_id),
-            end_time          INTEGER,
+            end_time          REAL,
             end_location_id   INTEGER REFERENCES locations (location_id),
             charge            REAL
         );""")
     db.close()
 
 
-def create_vehicle(vehicle_type, time, location_id):
+def create_vehicle(vehicle_type, location_id):
+    time_stamp = time.time()
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
         # sql = "INSERT INTO vehicles(vehicle_type) VALUES (%(vehicle_type)s)"
@@ -114,12 +116,12 @@ def create_vehicle(vehicle_type, time, location_id):
             info_id     INTEGER PRIMARY KEY AUTOINCREMENT
                                 UNIQUE
                                 NOT NULL,
-            time        INTEGER,
+            time        REAL,
             status      TEXT,
             location_id INTEGER REFERENCES locations (location_id) 
         );""")
 
-        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\",\"{}\",\"{}\")".format(time,
+        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\",\"{}\",\"{}\")".format(time_stamp,
                                                                                                                enum_values.Status.VACANT.value,
                                                                                                                location_id)
         cursor.execute(sql)
@@ -136,7 +138,8 @@ def create_location(station_name, postcode):
     db.close()
 
 
-def insert_vehicleInfo(vehicle_id, time, status, location_id):
+def insert_vehicleInfo(vehicle_id, status, location_id):
+    time_stamp = time.time()
     table_name = "vehicleInfo_" + str(vehicle_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -144,7 +147,7 @@ def insert_vehicleInfo(vehicle_id, time, status, location_id):
         # values = {'time': time, 'status': status, 'location_id': location_id}
         # cursor.execute(sql, values)
 
-        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\", \"{}\", \"{}\")".format(time,
+        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\", \"{}\", \"{}\")".format(time_stamp,
                                                                                                                  status,
                                                                                                                  location_id)
         cursor.execute(sql)
@@ -152,7 +155,8 @@ def insert_vehicleInfo(vehicle_id, time, status, location_id):
     db.close()
 
 
-def start_trip(cust_id, vehicle_id, start_time, start_location_id):
+def start_trip(cust_id, vehicle_id, start_location_id):
+    start_time_stamp = time.time()
     table_name = "trip_" + str(cust_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -162,13 +166,14 @@ def start_trip(cust_id, vehicle_id, start_time, start_location_id):
         # cursor.execute(sql, values)
 
         sql = "INSERT INTO " + table_name + "(vehicle_id, start_time, start_location_id) VALUES (\"{}\", \"{}\", \"{}\")".format(
-            vehicle_id, start_time, start_location_id)
+            vehicle_id, start_time_stamp, start_location_id)
         cursor.execute(sql)
         db.commit()
     db.close()
 
 
-def end_trip(cust_id, end_time, end_location_id, charge):
+def end_trip(cust_id, end_location_id, charge):
+    end_time_stamp = time.time()
     table_name = "trip_" + str(cust_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -176,7 +181,7 @@ def end_trip(cust_id, end_time, end_location_id, charge):
 
         trip_id = get_num(table_name)
         sql = "UPDATE " + table_name + " SET end_time = \"{}\", end_location_id = \"{}\", charge = \"{}\" WHERE trip_id = \"{}\"".format(
-            end_time, end_location_id, charge, trip_id)
+            end_time_stamp, end_location_id, charge, trip_id)
         cursor.execute(sql)
         db.commit()
     db.close()
