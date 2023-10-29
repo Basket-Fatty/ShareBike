@@ -3,6 +3,7 @@ import tkinter as tk
 from PIL import ImageTk
 from tkinter import *
 import importlib
+
 #storing not so easy string to remember in a variable so that it can be reusable
 bg_color = '#363636'
 """
@@ -79,54 +80,27 @@ def load_main_frame():
         command=lambda:repair_button() 
         ).pack(pady=5)
 
-    
-
 
 #track_function
-# def track_button():
-#     #widget protection so they don't get modified due to the other frames
-#     view_profile_frame.pack_propagate(False)
-#     #clearing the widgets of main_frame
-#     #clear_widgets(load_main_frame)
-#     #raising the view_profile_frame on the top
-#     view_profile_frame.tkraise()
-#
-#     main_logo = ImageTk.PhotoImage(file="ShareBike.png")
-#     logo_widget = tk.Label(view_profile_frame, image=main_logo, bg=bg_color, height=250, width=250)
-#     logo_widget.image = main_logo
-#     logo_widget.pack()
-#
-#     #Back Button
-#     tk.Button(
-#         view_profile_frame,
-#         text='BACK',
-#         font=("TkHeadingFont", 10),
-#         bg='#191919',
-#         fg='white',
-#         activebackground='#000000',
-#         activeforeground='white',
-#         command=lambda:load_main_frame()
-#         ).pack()
-#
-#     print('Track button clicked!!!')
-
 def track_button():
-    #widget protection so they don't get modified due to the other frames
-    charge_window = importlib.import_module("sharebike-operator-track")
+    #widget protection so they don't get modified due to the other frame
+    import sharebike_operator_track
+    importlib.reload(sharebike_operator_track)
 
 #charge fuction
 def charge_button():
-    charge_window = importlib.import_module("sharebike-operator-charge")
+    import sharebike_operator_charge
+    importlib.reload(sharebike_operator_charge)
 
 #return fuction
 def move_button():
-    # print('Move button clicked!!!')
-    move_window = importlib.import_module("sharebike-operator-move")
+    import sharebike_operator_move
+    importlib.reload(sharebike_operator_move)
 
 #report fuction
 def repair_button():
-    move_window = importlib.import_module("sharebike-operator-repair")
-    print('repair button clicked')
+    import sharebike_operator_repair
+    importlib.reload(sharebike_operator_repair)
 
 
 

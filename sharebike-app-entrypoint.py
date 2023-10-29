@@ -71,15 +71,18 @@ def load_main_frame():
 
 #view profile function
 def view_customer_options():
-    importlib.import_module("sharebike-customer")
+    import sharebike_customer
+    importlib.reload(sharebike_customer)
 
 #rent fuction
 def view_employee_options():
-    importlib.import_module("sharebike-operator")
+    import sharebike_operator
+    importlib.reload(sharebike_operator)
 
 #return fuction
 def manager_view():
-    importlib.import_module("sharebike-manager-generatereport")
+    import sharebike_manager_generatereport
+    importlib.reload(sharebike_manager_generatereport)
 
 
 #initialization

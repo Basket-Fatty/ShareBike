@@ -3,6 +3,7 @@ import tkinter as tk
 from PIL import ImageTk
 from tkinter import *
 
+
 import employee
 
 # storing not so easy string to remember in a variable so that it can be reusable
@@ -37,48 +38,15 @@ def load_main_frame():
 
     tk.Label(
         main_frame,
-        text="Vehicle ID",
+        text="Select Vehicle ID",
         bg=bg_color,
         fg="white",
-    ).place(x=120, y=320)
+    ).place(x=150, y=320)
 
-    vehicle_id_box = tk.Entry(
-        main_frame,
-        bg='#191919',
-        fg='white',
-    )
-    vehicle_id_box.place(x=200, y=320)
-
-    tk.Label(
-        main_frame,
-        text="Time",
-        bg=bg_color,
-        fg="white",
-    ).place(x=120, y=350)
-
-    time_box = tk.Entry(
-        main_frame,
-        bg='#191919',
-        fg='white',
-    )
-    time_box.place(x=200, y=350)
-
-    tk.Label(
-        main_frame,
-        text="Location",
-        bg=bg_color,
-        fg="white",
-    ).place(x=120, y=380)
-
-    location_id_box = tk.Entry(
-        main_frame,
-        bg='#191919',
-        fg='white',
-    )
-    location_id_box.place(x=200, y=380)
+    selected_option=populate_dropdown(main_frame)
 
     # Repair Button
-    tk.Button(
+    btn = tk.Button(
         main_frame,
         text='Repair',
         font=("TkHeadingFont", 10),
@@ -86,42 +54,53 @@ def load_main_frame():
         fg='white',
         activebackground='#000000',
         activeforeground='white',
-        command=lambda: view_report_button(vehicle_id_box, time_box, location_id_box)
-    ).place(x=180, y=450)
+        command=lambda: repair_button(selected_option)
+    )
+    btn.place(x=180, y=450)
+
+    if selected_option.get() == 'No Vehicle':
+        btn.configure(state="disabled")
 
 
-# view_report_function
-def view_report_button(vehicle_id_box, time_box, location_id_box):
-    # widget protection so they don't get modified due to the other frames
-    view_report_frame.pack_propagate(False)
-    # clearing the widgets of main_frame
-    # clear_widgets(load_main_frame)
-    # raising the view_profile_frame on the top
-    view_report_frame.tkraise()
 
-    main_logo = ImageTk.PhotoImage(file="ShareBike.png")
-    logo_widget = tk.Label(view_report_frame, image=main_logo, bg=bg_color, height=250, width=250)
-    logo_widget.image = main_logo
-    logo_widget.pack()
+def populate_dropdown(move_vehicle_window):
+    # selection = name_box.curselection()
+    # print(selection)
+    # print(name_box.get(selection[0]))
+    # fetched_string_array = name_box.get(selection[0]).split("---")
+    # current_location = fetched_string_array[1]
+    filtered_location = []
+    vehicle_dtls = employee.track_vehicle()
+    for vehicle_id, vehicle_dtls in vehicle_dtls.items():
+        if vehicle_dtls[2] == 'DAMAGED':
+            total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
+            filtered_location.append(total_info)
+    clicked = StringVar(move_vehicle_window)
+    if len(filtered_location) < 1:
+        filtered_location.append("No Vehicle")
+    clicked.set(filtered_location[0])
+    drop = OptionMenu(move_vehicle_window, clicked, *filtered_location)
+    drop.place(x=130, y=360, width="150")
+    if filtered_location[0] == "No Vehicle":
+        drop.configure(state="disabled")
+    return clicked
 
-    # Back Button
-    tk.Button(
-        view_report_frame,
-        text='BACK',
-        font=("TkHeadingFont", 10),
-        bg='#191919',
-        fg='white',
-        activebackground='#000000',
-        activeforeground='white',
-        command=lambda: load_main_frame()
-    ).pack()
 
-    print('View report button clicked!!!')
-    vehicle_id = vehicle_id_box.get()
-    time = time_box.get()
-    location_id = location_id_box.get()
-    employee.repair(int(vehicle_id), int(time), int(location_id))
+def repair_button(optionbox_selection):
+    selected_option = optionbox_selection.get()
+    fetched_string_array = selected_option.split("---")
+    vehicle_id = fetched_string_array[0]
+    selected_location = fetched_string_array[0]
+    location_dct = employee.fetch_all_location_info_in_dict()
+    location = find_location_id(location_dct, fetched_string_array[1])
+    time = time.time()
+    employee.update_vehicle_charge(vehicle_id, time, "VACANT", location)
+    tk.messagebox.showinfo("Vehicle Repaired", "Vehicle "+ selected_option + " has  been repaired")
 
+def find_location_id(location_dct, to_match):
+    for key, value in location_dct.items():
+        if value == to_match:
+            return key
 
 # initialization
 root = tk.Toplevel()
