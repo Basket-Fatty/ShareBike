@@ -59,7 +59,7 @@ def load_main_frame():
     #Adding Manager Options
     tk.Button(
         main_frame,
-        text='Manager Generate Reports', #test code
+        text='Manager Generate Reports', #test codesnippi
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',

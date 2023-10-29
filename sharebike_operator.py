@@ -39,6 +39,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=10,
         activebackground='#000000',
         activeforeground='white',
         command=lambda:track_button() 
@@ -51,6 +52,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=10,
         activebackground='#000000',
         activeforeground='white',
         command=lambda:charge_button() 
@@ -63,6 +65,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=10,
         activebackground='#000000',
         activeforeground='white',
         command=lambda:move_button() 
@@ -75,6 +78,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=10,
         activebackground='#000000',
         activeforeground='white',
         command=lambda:repair_button() 
