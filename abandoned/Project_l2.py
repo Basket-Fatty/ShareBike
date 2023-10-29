@@ -47,7 +47,7 @@ window.title("E-Vehicle Share System")
 window.geometry("500x700")
 window.configure(background=bg_colour)
 
-logo = PhotoImage(file="bike_logo.png")
+logo = PhotoImage(file="../bike_logo.png")
 logoimg = Label(bg=bg_colour, image=logo)
 logoimg.place(x=150, y=20, width=200, height=150)
 
