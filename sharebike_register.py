@@ -31,8 +31,6 @@ def config(window):
         messagebox.showinfo("Information", "Register Successfully!")
         clear()
 
-        jump_to_login()
-
     def clear():
         bank_acc_nbr_e.delete(0, END)
         fname_e.delete(0, END)
@@ -40,13 +38,6 @@ def config(window):
         email_e.delete(0, END)
         phone_e.delete(0, END)
         password_e.delete(0, END)
-
-    def jump_to_login():
-        import sharebike_customer_login
-        login_window = Toplevel()
-        sharebike_login.config(login_window)
-        window.withdraw()
-        login_window.deiconify()
 
     frame = Frame(window, width=400, height=600, bg=bg_color)
 
@@ -74,38 +65,38 @@ def config(window):
     r3 = ttk.Radiobutton(frame, text='Manager', variable=var, value=enum_values.UserType.MANAGER.value, style="Custom.TRadiobutton")
     r3.grid(row=3, column=2)
 
-    bank_acc_nbr = Label(frame, text="Bank Account Number : ", bg=bg_color, fg='white')
-    bank_acc_nbr.grid(row=4, column=0)
+    bank_acc_nbr_label = Label(frame, text="Bank Account Number : ", bg=bg_color, fg='white')
+    bank_acc_nbr_label.grid(row=4, column=0)
 
     bank_acc_nbr_e = Entry(frame, font=("Arial", 13))
     bank_acc_nbr_e.grid(row=4, column=1, pady=20)
 
-    fname = Label(frame, text="First Name : ", bg=bg_color, fg='white')
-    fname.grid(row=5, column=0)
+    fname_label = Label(frame, text="First Name : ", bg=bg_color, fg='white')
+    fname_label.grid(row=5, column=0)
 
     fname_e = Entry(frame, font=("Arial", 13))
     fname_e.grid(row=5, column=1, pady=20)
 
-    lname = Label(frame, text="Last Name : ", bg=bg_color, fg='white')
-    lname.grid(row=6, column=0)
+    lname_label = Label(frame, text="Last Name : ", bg=bg_color, fg='white')
+    lname_label.grid(row=6, column=0)
 
     lname_e = Entry(frame, font=("Arial", 13))
     lname_e.grid(row=6, column=1, pady=20)
 
-    email = Label(frame, text="Email : ", bg=bg_color, fg='white')
-    email.grid(row=7, column=0)
+    email_label = Label(frame, text="Email : ", bg=bg_color, fg='white')
+    email_label.grid(row=7, column=0)
 
     email_e = Entry(frame, font=("Arial", 13))
     email_e.grid(row=7, column=1, pady=20)
 
-    phone = Label(frame, text="Phone Number : ", bg=bg_color, fg='white')
-    phone.grid(row=8, column=0)
+    phone_label = Label(frame, text="Phone Number : ", bg=bg_color, fg='white')
+    phone_label.grid(row=8, column=0)
 
     phone_e = Entry(frame, font=("Arial", 13))
     phone_e.grid(row=8, column=1, pady=20)
 
-    password_lbl = Label(frame, text="Password : ", bg=bg_color, fg='white')
-    password_lbl.grid(row=9, column=0)
+    password_label = Label(frame, text="Password : ", bg=bg_color, fg='white')
+    password_label.grid(row=9, column=0)
 
     password_e = Entry(frame, font=("Arial", 13))
     password_e.grid(row=9, column=1, pady=20)
@@ -118,4 +109,3 @@ def config(window):
     clear_btn.grid(row=10, column=2, pady=30)
 
     frame.pack()
-
