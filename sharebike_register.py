@@ -42,7 +42,7 @@ def config(window):
         password_e.delete(0, END)
 
     def jump_to_login():
-        import sharebike_login
+        import sharebike_customer_login
         login_window = Toplevel()
         sharebike_login.config(login_window)
         window.withdraw()

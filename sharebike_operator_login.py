@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox, ttk
 
 from PIL import ImageTk
+
 import enum_values
 import general
 
@@ -10,7 +11,7 @@ main_logo = None
 
 
 def config(window):
-    window.title("Login")
+    window.title("Operator | Login")
     window.geometry('600x750')
     window.configure(bg=bg_color)
 
@@ -19,7 +20,7 @@ def config(window):
         email = email_e.get()
         password = password_e.get()
 
-        if general.sign_in(var.get(), email, password):
+        if general.sign_in(enum_values.UserType.OPERATOR.value, email, password):
             messagebox.showinfo("Information", "Log in Successfully!")
         else:
             messagebox.showerror("Error", "Email and Password Mismatch")
@@ -45,26 +46,26 @@ def config(window):
     label = Label(frame, image=main_logo, bg=bg_color, height=250, width=250)
     label.grid(row=0, column=0, columnspan=2)
 
-    login_lbl = Label(frame, text="Log In", bg=bg_color, fg="white", font=('TkMenuFont', 14))
+    login_lbl = Label(frame, text="Customer Log In", bg=bg_color, fg="white", font=('TkMenuFont', 14))
     login_lbl.grid(row=1, column=0, columnspan=2, pady=40)
 
-    var = StringVar()
-    var.set(enum_values.UserType.CUSTOMER.value)
-
-    style = ttk.Style()
-    style.configure("Custom.TRadiobutton", background=bg_color, foreground="white")
-
-    r1 = ttk.Radiobutton(frame, text='Customer', variable=var, value=enum_values.UserType.CUSTOMER.value,
-                         style="Custom.TRadiobutton")
-    r1.grid(row=2, column=0)
-
-    r2 = ttk.Radiobutton(frame, text='Operator', variable=var, value=enum_values.UserType.OPERATOR.value,
-                         style="Custom.TRadiobutton")
-    r2.grid(row=2, column=1)
-
-    r3 = ttk.Radiobutton(frame, text='Manager', variable=var, value=enum_values.UserType.MANAGER.value,
-                         style="Custom.TRadiobutton")
-    r3.grid(row=2, column=2)
+    # var = StringVar()
+    # var.set(enum_values.UserType.CUSTOMER.value)
+    #
+    # style = ttk.Style()
+    # style.configure("Custom.TRadiobutton", background=bg_color, foreground="white")
+    #
+    # r1 = ttk.Radiobutton(frame, text='Customer', variable=var, value=enum_values.UserType.CUSTOMER.value,
+    #                      style="Custom.TRadiobutton")
+    # r1.grid(row=2, column=0)
+    #
+    # r2 = ttk.Radiobutton(frame, text='Operator', variable=var, value=enum_values.UserType.OPERATOR.value,
+    #                      style="Custom.TRadiobutton")
+    # r2.grid(row=2, column=1)
+    #
+    # r3 = ttk.Radiobutton(frame, text='Manager', variable=var, value=enum_values.UserType.MANAGER.value,
+    #                      style="Custom.TRadiobutton")
+    # r3.grid(row=2, column=2)
 
     # details
     email_lbl = Label(frame, text="Email", bg=bg_color, fg="white", )

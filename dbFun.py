@@ -200,6 +200,17 @@ def get_trips(cust_id):
     return results
 
 
+def get_latest_trip(cust_id):
+    table_name = "trip_" + str(cust_id)
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT * FROM " + table_name + " WHERE trip_id = (SELECT MAX(trip_id) FROM " + table_name + ")"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+    db.close()
+    return results
+
+
 def get_vehicleInfo(vehicle_id):
     table_name = "vehicleInfo_" + str(vehicle_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
@@ -335,3 +346,13 @@ def get_all_loc():
         result = cursor.fetchall()
     db.close()
     return result
+
+
+def get_cust_id(email):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT cust_id FROM customers WHERE email = \"{}\"".format(email)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result[0][0]
