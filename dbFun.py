@@ -121,9 +121,10 @@ def create_vehicle(vehicle_type, location_id):
             location_id INTEGER REFERENCES locations (location_id) 
         );""")
 
-        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\",\"{}\",\"{}\")".format(time_stamp,
-                                                                                                               enum_values.Status.VACANT.value,
-                                                                                                               location_id)
+        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\",\"{}\",\"{}\")".format(
+            time_stamp,
+            enum_values.Status.VACANT.value,
+            location_id)
         cursor.execute(sql)
         db.commit()
     db.close()
@@ -147,9 +148,10 @@ def insert_vehicleInfo(vehicle_id, status, location_id):
         # values = {'time': time, 'status': status, 'location_id': location_id}
         # cursor.execute(sql, values)
 
-        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\", \"{}\", \"{}\")".format(time_stamp,
-                                                                                                                 status,
-                                                                                                                 location_id)
+        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\", \"{}\", \"{}\")".format(
+            time_stamp,
+            status,
+            location_id)
         cursor.execute(sql)
         db.commit()
     db.close()
@@ -323,6 +325,7 @@ def get_profile(cust_id):
         result = cursor.fetchall()
     db.close()
     return result[0]
+
 
 def get_all_loc():
     with sqlite3.connect("ShareBikeDB.db") as db:

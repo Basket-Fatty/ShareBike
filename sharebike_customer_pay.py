@@ -15,9 +15,7 @@ def clear_widgets(frame):
         widget.destroy()
 """
 
-
-# cust_id = 0
-# amount = 0.0
+cust_id = 1
 
 
 # initializing the main_frame
@@ -38,8 +36,6 @@ def load_main_frame():
         fg="white",  # text color
         font=('TkMenuFont', 14)
     ).pack(pady=20)  # pady is used to create a padding along the y axis
-
-    
 
     tk.Label(
         main_frame,
@@ -102,9 +98,8 @@ def pay_button(cust_id_box, amount_box):
     print('Amount: ', a)
 
     # integrate with the back end
-    cust_id = cust_id_box.get()
     amount = amount_box.get()
-    customer.pay(int(cust_id), float(amount))
+    customer.pay(cust_id, float(amount))
 
 
 # initialization
@@ -125,4 +120,3 @@ for frame in (main_frame, view_report_frame):
     frame.grid(row=0, column=0)
 
 load_main_frame()
-

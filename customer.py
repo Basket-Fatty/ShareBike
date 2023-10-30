@@ -103,3 +103,12 @@ def view_profile(cust_id):
     series = pd.Series(data,
                        index=["cust_id", "bank_acc_nbr", "balance", "password", "fname", "lname", "email", "phnum"])
     return series
+
+
+def get_local_vehicles(location_id):
+    vehicles = dbFun.get_latest_vehicleInfos()
+    vehicle_ids = []
+    for vehicle_id, vehicles_info in vehicles.items():
+        if vehicles_info[3] == location_id:
+            vehicle_ids.append(vehicle_id)
+    return vehicle_ids

@@ -1,9 +1,11 @@
 import tkinter as tk
+
 # using Pillow library for importing images from the system
 from PIL import ImageTk
 from tkinter import *
 
 import customer
+import dbFun
 
 # storing not so easy string to remember in a variable so that it can be reusable
 bg_color = '#363636'
@@ -15,6 +17,7 @@ def clear_widgets(frame):
         widget.destroy()
 """
 
+cust_id = 1
 
 # initializing the main_frame
 def load_main_frame():
@@ -35,19 +38,22 @@ def load_main_frame():
         font=('TkMenuFont', 14)
     ).pack(pady=20)  # pady is used to create a padding along the y axis
 
-
     tk.Label(
         main_frame,
         text="Location",
         bg=bg_color,
         fg="white",
     ).place(x=170, y=320)
-    
-    selected_option = tk.StringVar()
-    vehicleid_options = ["v_option1", "v_option2", "v_option3" , "v_option4"]
-    dropdown = tk.OptionMenu(main_frame, selected_option, *vehicleid_options)
-    dropdown.place(x=150, y=350, width = 100)
-    
+
+    loc_selected_option = tk.StringVar()
+
+    locations = dbFun.get_locations()
+    station_list = []
+    for location in locations:
+        station_list.append(location[1])
+
+    location_dropdown = tk.OptionMenu(main_frame, loc_selected_option, *station_list)
+    location_dropdown.place(x=150, y=350, width=100)
 
     tk.Label(
         main_frame,
@@ -56,10 +62,24 @@ def load_main_frame():
         fg="white",
     ).place(x=170, y=390)
 
-    loc_selected_option = tk.StringVar()
-    loc_id_options = ["v_option1", "v_option2", "v_option3" , "v_option4"]
-    dropdown = tk.OptionMenu(main_frame, loc_selected_option, *loc_id_options)
-    dropdown.place(x=150, y=420, width = 100)
+    vehicle_selected_option = tk.StringVar()
+
+    vehicle_ids = [""]
+
+    vehicle_dropdown = tk.OptionMenu(main_frame, vehicle_selected_option, *vehicle_ids)
+    vehicle_dropdown.place(x=150, y=420, width=100)
+
+    def on_selected_location(name, index, mode):
+        selected_loc = loc_selected_option.get()
+        vehicle_dropdown['menu'].delete(0, END)
+
+        selected_loc_id = dbFun.get_loc_id(selected_loc)
+        vehicle_ids = customer.get_local_vehicles(selected_loc_id)
+
+        for vehicle_id in vehicle_ids:
+            vehicle_dropdown['menu'].add_command(label="vehicle" + str(vehicle_id), command=lambda v=vehicle_id: vehicle_selected_option.set(v))
+
+    loc_selected_option.trace("w", on_selected_location)
 
     """tk.Label(
         main_frame,
@@ -74,10 +94,6 @@ def load_main_frame():
         fg='white',
     )
     time_box.place(x=200, y=350)"""
-
-    
-
-    
 
     """tk.Label(
         main_frame,
@@ -103,12 +119,12 @@ def load_main_frame():
         width=10,
         activebackground='#000000',
         activeforeground='white',
-        command=lambda: view_report_button(vehicle_id_box, time_box, location_id_box, cust_id_box)
+        command=lambda: rent_button(loc_selected_option, vehicle_selected_option)
     ).place(x=155, y=470)
 
 
 # rent_function - this has to be changed when backend is implemented - CHANGE ACCORDINGLY
-def view_report_button(vehicle_id_box, time_box, location_id_box, cust_id_box):
+def rent_button(loc_selected_option, vehicle_selected_option):
     # widget protection so they don't get modified due to the other frames
     view_report_frame.pack_propagate(False)
     # clearing the widgets of main_frame
@@ -136,11 +152,9 @@ def view_report_button(vehicle_id_box, time_box, location_id_box, cust_id_box):
     print('rent button clicked!!!')
 
     # integrate with the back end
-    vehicle_id = vehicle_id_box.get()
-    time = time_box.get()
-    location_id = location_id_box.get()
-    cust_id = cust_id_box.get()
-    customer.rent(int(vehicle_id), int(time), int(location_id), int(cust_id))
+    vehicle_id = vehicle_selected_option.get()
+    location_id = dbFun.get_loc_id(loc_selected_option.get())
+    customer.rent(int(vehicle_id), int(location_id), cust_id)
 
 
 # initialization
