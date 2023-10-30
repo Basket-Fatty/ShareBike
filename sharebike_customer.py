@@ -41,6 +41,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=15,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: view_profile_button()
@@ -53,6 +54,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=15,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: rent_button()
@@ -65,6 +67,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=15,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: return_button()
@@ -77,6 +80,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=15,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: report_button()
@@ -89,6 +93,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=15,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: pay_button()
@@ -101,6 +106,7 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=15,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: transaction_history_button()

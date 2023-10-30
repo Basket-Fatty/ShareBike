@@ -35,62 +35,33 @@ def load_main_frame():
         font=('TkMenuFont', 14)
     ).pack(pady=20)  # pady is used to create a padding along the y axis
 
-    tk.Label(
-        main_frame,
-        text="Vehicle ID",
-        bg=bg_color,
-        fg="white",
-    ).place(x=120, y=320)
 
-    vehicle_id_box = tk.Entry(
-        main_frame,
-        bg='#191919',
-        fg='white',
-    )
-    vehicle_id_box.place(x=200, y=320)
-
-    tk.Label(
-        main_frame,
-        text="Time",
-        bg=bg_color,
-        fg="white",
-    ).place(x=120, y=350)
-
-    time_box = tk.Entry(
-        main_frame,
-        bg='#191919',
-        fg='white',
-    )
-    time_box.place(x=200, y=350)
 
     tk.Label(
         main_frame,
         text="Location",
         bg=bg_color,
         fg="white",
-    ).place(x=120, y=380)
-
-    location_id_box = tk.Entry(
-        main_frame,
-        bg='#191919',
-        fg='white',
-    )
-    location_id_box.place(x=200, y=380)
+    ).place(x=170, y=320)
+    
+    selected_option = tk.StringVar()
+    vehicleid_options = ["v_option1", "v_option2", "v_option3" , "v_option4"]
+    dropdown = tk.OptionMenu(main_frame, selected_option, *vehicleid_options)
+    dropdown.place(x=150, y=350, width = 100)
+    
 
     tk.Label(
         main_frame,
-        text="Customer ID",
+        text="Vehicle ID",
         bg=bg_color,
         fg="white",
-    ).place(x=120, y=410)
+    ).place(x=170, y=390)
 
-    cust_id_box = tk.Entry(
-        main_frame,
-        bg='#191919',
-        fg='white',
-    )
-    cust_id_box.place(x=200, y=410)
-
+    loc_selected_option = tk.StringVar()
+    loc_id_options = ["v_option1", "v_option2", "v_option3" , "v_option4"]
+    dropdown = tk.OptionMenu(main_frame, loc_selected_option, *loc_id_options)
+    dropdown.place(x=150, y=420, width = 100)
+    
     # Return Button
     tk.Button(
         main_frame,
@@ -98,10 +69,11 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=10,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: view_report_button(vehicle_id_box, time_box, location_id_box, cust_id_box)
-    ).place(x=180, y=450)
+    ).place(x=155, y=470)
 
 
 # view_report_function

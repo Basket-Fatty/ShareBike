@@ -39,21 +39,7 @@ def load_main_frame():
         font=('TkMenuFont', 14)
     ).pack(pady=20)  # pady is used to create a padding along the y axis
 
-    tk.Label(
-        main_frame,
-        text="Customer ID",
-        bg=bg_color,
-        fg="white",
-    ).place(x=120, y=320)
-
-    # global cust_id
-
-    cust_id_box = tk.Entry(
-        main_frame,
-        bg='#191919',
-        fg='white',
-    )
-    cust_id_box.place(x=200, y=320)
+    
 
     tk.Label(
         main_frame,
@@ -78,10 +64,11 @@ def load_main_frame():
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=10,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: pay_button(cust_id_box, amount_box)
-    ).place(x=180, y=400)
+    ).place(x=155, y=400)
 
 
 # pay_function
