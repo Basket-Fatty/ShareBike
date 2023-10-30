@@ -129,7 +129,3 @@ for frame in (main_frame, view_profile_frame):
     frame.grid(row=0, column=0)
 
 load_main_frame()
-
-
-#running the application
-root.mainloop()

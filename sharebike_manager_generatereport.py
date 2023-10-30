@@ -1,9 +1,12 @@
 import tkinter as tk
 # using Pillow library for importing images from the system
 from PIL import ImageTk
+import numpy as np
+import matplotlib.pyplot as plt
 from tkinter import *
 
 import manager
+import employee
 
 # storing not so easy string to remember in a variable so that it can be reusable
 bg_color = '#363636'
@@ -73,7 +76,51 @@ def load_main_frame():
         activebackground='#000000',
         activeforeground='white',
         command=lambda: view_report_button(start_time_box, end_time_box)
-    ).place(x=180, y=400)
+    ).place(x=160, y=400)
+
+    tk.Button(
+        main_frame,
+        text='Generate Vehicle Graph',
+        font=("TkHeadingFont", 10),
+        bg='#191919',
+        fg='white',
+        activebackground='#000000',
+        activeforeground='white',
+        command=generate_vacancy_graph
+    ).place(x=135, y=450)
+
+
+def generate_vacancy_graph():
+    data = {'VACANT': 20, 'RENTED': 15, 'DAMAGED': 30,
+            'LOPOWER': 35}
+
+    vehicles_status = {}
+    vehicle_dtls = employee.track_vehicle()
+    for vehicle_id, vehicle_more_infos in vehicle_dtls.items():
+        cnt = 0
+        stat = vehicle_more_infos[2]
+        if stat in vehicles_status:
+            cnt = vehicles_status[stat]
+        cnt = cnt + 1
+        print(stat + "___" + str(cnt))
+        vehicles_status.update({stat: cnt})
+
+   # vehicles_status = {'VACANT': 20, 'RENTED': 15, 'DAMAGED': 30,
+    #                   'LOWPOWER': 35}
+
+    courses = list(vehicles_status.keys())
+    values = list(vehicles_status.values())
+
+    fig = plt.figure(figsize=(10, 5))
+
+    # creating the bar plot
+    plt.bar(courses, values, color='maroon',
+            width=0.4)
+
+    plt.xlabel("Vehicle Current state")
+    plt.ylabel("Number of Vehicles")
+    plt.title("Status of various Vehicles")
+    plt.show()
 
 
 # view_report_function
@@ -131,6 +178,3 @@ for frame in (main_frame, view_report_frame):
     frame.grid(row=0, column=0)
 
 load_main_frame()
-
-# running the application
-root.mainloop()

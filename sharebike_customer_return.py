@@ -159,5 +159,3 @@ for frame in (main_frame, view_report_frame):
 
 load_main_frame()
 
-# running the application
-root.mainloop()

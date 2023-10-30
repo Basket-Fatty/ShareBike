@@ -4,6 +4,7 @@ from tkinter import messagebox
 # using Pillow library for importing images from the system
 from PIL import ImageTk
 from tkinter import *
+import time
 
 import employee
 
@@ -112,8 +113,8 @@ def move_button(selected_vehicle, selected_loc):
     vehicle_id = fetched_string_array[0]
     location_dct = employee.fetch_all_location_info_in_dict()
     location = find_location_id(location_dct, fetched_string_array[1])
-    time = 100
-    employee.update_vehicle_charge(vehicle_id, time, "VACANT", location)
+    time1=time.time()
+    employee.update_vehicle_charge(vehicle_id, time1, "VACANT", location)
     messagebox.showinfo("Vehicle location changed", "Vehicle moved from "+ selection + " to " + selected_location)
 
 
@@ -140,6 +141,3 @@ for frame in (main_frame, view_report_frame):
     frame.grid(row=0, column=0)
 
 load_main_frame()
-
-# running the application
-root.mainloop()

@@ -3,6 +3,7 @@ import tkinter as tk
 from PIL import ImageTk
 from tkinter import *
 import data_manipulation as dm
+import time
 
 import employee
 
