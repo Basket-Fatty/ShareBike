@@ -6,6 +6,7 @@ Created on Tue Sep 26 18:47:06 2023
 """
 
 import sqlite3
+import time
 
 import enum_values
 
@@ -88,16 +89,17 @@ def create_customer(password, fname, lname, email, phnum, bank_acc_nbr):
                               UNIQUE
                               NOT NULL,
             vehicle_id        INTEGER REFERENCES vehicles (vehicle_id),
-            start_time        INTEGER,
+            start_time        REAL,
             start_location_id INTEGER REFERENCES locations (location_id),
-            end_time          INTEGER,
+            end_time          REAL,
             end_location_id   INTEGER REFERENCES locations (location_id),
             charge            REAL
         );""")
     db.close()
 
 
-def create_vehicle(vehicle_type, time, location_id):
+def create_vehicle(vehicle_type, location_id):
+    time_stamp = time.time()
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
         # sql = "INSERT INTO vehicles(vehicle_type) VALUES (%(vehicle_type)s)"
@@ -114,14 +116,15 @@ def create_vehicle(vehicle_type, time, location_id):
             info_id     INTEGER PRIMARY KEY AUTOINCREMENT
                                 UNIQUE
                                 NOT NULL,
-            time        INTEGER,
+            time        REAL,
             status      TEXT,
             location_id INTEGER REFERENCES locations (location_id) 
         );""")
 
-        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\",\"{}\",\"{}\")".format(time,
-                                                                                                               enum_values.Status.VACANT.value,
-                                                                                                               location_id)
+        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\",\"{}\",\"{}\")".format(
+            time_stamp,
+            enum_values.Status.VACANT.value,
+            location_id)
         cursor.execute(sql)
         db.commit()
     db.close()
@@ -136,7 +139,8 @@ def create_location(station_name, postcode):
     db.close()
 
 
-def insert_vehicleInfo(vehicle_id, time, status, location_id):
+def insert_vehicleInfo(vehicle_id, status, location_id):
+    time_stamp = time.time()
     table_name = "vehicleInfo_" + str(vehicle_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -144,15 +148,17 @@ def insert_vehicleInfo(vehicle_id, time, status, location_id):
         # values = {'time': time, 'status': status, 'location_id': location_id}
         # cursor.execute(sql, values)
 
-        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\", \"{}\", \"{}\")".format(time,
-                                                                                                                 status,
-                                                                                                                 location_id)
+        sql = "INSERT INTO " + table_name + "(time, status, location_id) VALUES (\"{}\", \"{}\", \"{}\")".format(
+            time_stamp,
+            status,
+            location_id)
         cursor.execute(sql)
         db.commit()
     db.close()
 
 
-def start_trip(cust_id, vehicle_id, start_time, start_location_id):
+def start_trip(cust_id, vehicle_id, start_location_id):
+    start_time_stamp = time.time()
     table_name = "trip_" + str(cust_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -162,13 +168,14 @@ def start_trip(cust_id, vehicle_id, start_time, start_location_id):
         # cursor.execute(sql, values)
 
         sql = "INSERT INTO " + table_name + "(vehicle_id, start_time, start_location_id) VALUES (\"{}\", \"{}\", \"{}\")".format(
-            vehicle_id, start_time, start_location_id)
+            vehicle_id, start_time_stamp, start_location_id)
         cursor.execute(sql)
         db.commit()
     db.close()
 
 
-def end_trip(cust_id, end_time, end_location_id, charge):
+def end_trip(cust_id, end_location_id, charge):
+    end_time_stamp = time.time()
     table_name = "trip_" + str(cust_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -176,7 +183,7 @@ def end_trip(cust_id, end_time, end_location_id, charge):
 
         trip_id = get_num(table_name)
         sql = "UPDATE " + table_name + " SET end_time = \"{}\", end_location_id = \"{}\", charge = \"{}\" WHERE trip_id = \"{}\"".format(
-            end_time, end_location_id, charge, trip_id)
+            end_time_stamp, end_location_id, charge, trip_id)
         cursor.execute(sql)
         db.commit()
     db.close()
@@ -187,6 +194,17 @@ def get_trips(cust_id):
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
         sql = "SELECT * FROM " + table_name
+        cursor.execute(sql)
+        results = cursor.fetchall()
+    db.close()
+    return results
+
+
+def get_latest_trip(cust_id):
+    table_name = "trip_" + str(cust_id)
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT * FROM " + table_name + " WHERE trip_id = (SELECT MAX(trip_id) FROM " + table_name + ")"
         cursor.execute(sql)
         results = cursor.fetchall()
     db.close()
@@ -222,6 +240,16 @@ def get_num(table_name):
     return result[0][0]
 
 
+def get_locations():
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT * FROM locations"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result
+
+
 def get_loc_name(location_id):
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -230,6 +258,16 @@ def get_loc_name(location_id):
         result = cursor.fetchall()
     db.close()
     return result
+
+
+def get_loc_id(station_name):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT location_id FROM locations WHERE station_name = \"{}\"".format(station_name)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result[0][0]
 
 
 def check_status(vehicle_id):
@@ -288,3 +326,33 @@ def get_latest_vehicleInfos():
     for vehicle_id in range(1, vehicle_num + 1):
         results[vehicle_id] = get_vehicleInfo(vehicle_id)[-1]
     return results
+
+
+def get_profile(cust_id):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT * FROM customers WHERE cust_id = \"{}\"".format(cust_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result[0]
+
+
+def get_all_loc():
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT * FROM locations"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result
+
+
+def get_cust_id(email):
+    with sqlite3.connect("ShareBikeDB.db") as db:
+        cursor = db.cursor()
+        sql = "SELECT cust_id FROM customers WHERE email = \"{}\"".format(email)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    db.close()
+    return result[0][0]

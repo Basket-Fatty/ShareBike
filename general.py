@@ -2,6 +2,8 @@ import dbFun
 import sqlite3
 import pandas as pd
 
+import enum_values
+
 
 # "sign_up" for customer
 def sign_up(password, fname, lname, email, phnum, bank_acc_nbr):
@@ -24,8 +26,10 @@ def sign_up_inner(user_type, password, fname, lname, email, phnum):
 def sign_in(user_type, email, password):
     with sqlite3.connect('ShareBikeDB.db') as db:
         cursor = db.cursor()
-        sql = "SELECT password FROM \"{}\" WHERE email = \"{}\"".format(user_type, email)
+        sql = "SELECT password FROM \"{}s\" WHERE email = \"{}\"".format(user_type, email)
         cursor.execute(sql)
-        result = cursor.fetchall()[0][0]
+        result = cursor.fetchall()
+        if len(result) == 0:
+            return False
     db.close()
-    return password == result
+    return password == result[0][0]

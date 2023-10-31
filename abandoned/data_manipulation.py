@@ -4,7 +4,7 @@ import dbFun
 
 
 def get_all_loc():
-    with sqlite3.connect("ShareBikeDB.db") as db:
+    with sqlite3.connect("../ShareBikeDB.db") as db:
         cursor = db.cursor()
         sql = "SELECT * FROM locations"
         cursor.execute(sql)

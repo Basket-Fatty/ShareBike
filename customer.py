@@ -1,53 +1,54 @@
 import pandas as pd
 import dbFun
 import enum_values
+import time
 
 charge_policy = {"Bike": 1.0, "E-Bike": 2.0}
 
 
-def rent(vehicle_id, time, location_id, cust_id):
+def rent(vehicle_id, location_id, cust_id):
     status = dbFun.check_status(vehicle_id)
 
     if status == enum_values.Status.VACANT.value:
         # create new vehicleInfo, add it to the table
         status = enum_values.Status.RENTED.value
-        dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+        dbFun.insert_vehicleInfo(vehicle_id, status, location_id)
         # create new trip, add it to the table
-        dbFun.start_trip(cust_id, vehicle_id, time, location_id)
+        dbFun.start_trip(cust_id, vehicle_id, location_id)
 
         return True
     else:
         return False
 
 
-def returnBike(vehicle_id, time, location_id, cust_id):
+def returnBike(vehicle_id, location_id, cust_id):
     status = dbFun.check_status(vehicle_id)
 
     if status == enum_values.Status.RENTED.value:
         start_time = dbFun.get_time(vehicle_id)
-        end_time = time
+        end_time = time.time()
         vehicle_type = dbFun.get_type(vehicle_id)
 
         # create new vehicleInfo, add it to the table
         status = enum_values.Status.VACANT.value
-        dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+        dbFun.insert_vehicleInfo(vehicle_id, status, location_id)
 
         # calculate the charge
-        charge = (end_time - start_time) * charge_policy.get(vehicle_type)
+        charge = round(((end_time - start_time) / 3600) * charge_policy.get(vehicle_type), 2)
         balance = dbFun.get_balance(cust_id)
         dbFun.update_balance(cust_id, balance - charge)
 
         # create new trip, add it to the table
-        dbFun.end_trip(cust_id, time, location_id, charge)
+        dbFun.end_trip(cust_id, location_id, charge)
 
         return True
     else:
         return False
 
 
-def report(vehicle_id, time, status, location_id):
+def report(vehicle_id, status, location_id):
     # create new vehicleInfo, add it to the table
-    dbFun.insert_vehicleInfo(vehicle_id, time, status, location_id)
+    dbFun.insert_vehicleInfo(vehicle_id, status, location_id)
 
 
 def pay(cust_id, amount):
@@ -84,5 +85,30 @@ def history(cust_id):
 
         series = series.drop('start_location_id')
         series = series.drop('end_location_id')
+
+        start_time_stamp = series['start_time']
+        start_time_str = time.strftime("%Y-%m-%d %H:%M", time.localtime(start_time_stamp))
+        series['start_time'] = start_time_str
+
+        end_time_stamp = series['end_time']
+        end_time_str = time.strftime("%Y-%m-%d %H:%M", time.localtime(end_time_stamp))
+        series['end_time'] = end_time_str
+
         result.append(series)
     return result
+
+
+def view_profile(cust_id):
+    data = dbFun.get_profile(cust_id)
+    series = pd.Series(data,
+                       index=["cust_id", "bank_acc_nbr", "balance", "password", "fname", "lname", "email", "phnum"])
+    return series
+
+
+def get_local_vehicles(location_id):
+    vehicles = dbFun.get_latest_vehicleInfos()
+    vehicle_ids = []
+    for vehicle_id, vehicles_info in vehicles.items():
+        if vehicles_info[3] == location_id:
+            vehicle_ids.append(vehicle_id)
+    return vehicle_ids
