@@ -6,6 +6,7 @@ from PIL import ImageTk
 from tkinter import *
 import time
 
+import dbFun
 import employee
 
 # storing not so easy string to remember in a variable so that it can be reusable
@@ -19,8 +20,6 @@ def clear_widgets(frame):
 """
 
 
-
-        
 # initialization
 def config(window):
     window.title('ShareBike | Move - Operator')
@@ -111,7 +110,6 @@ def config(window):
 
     def populate_dropdown_location(selected_vehicle, move_vehicle_window):
         selection = selected_vehicle.get()
-        print(selection)
         fetched_string_array = selection.split("---")
         current_location = fetched_string_array[1]
         location_dct = employee.fetch_all_location_info_in_dict()
@@ -123,6 +121,23 @@ def config(window):
         clicked.set("Select Location")
         drop = OptionMenu(move_vehicle_window, clicked, *filtered_location)
         drop.place(x=130, y=410, width="150")
+
+        def on_selected_location(name, index, mode):
+            drop['menu'].delete(0, END)
+            filtered_location.clear()
+            selection = selected_vehicle.get()
+            fetched_string_array = selection.split("---")
+            current_location = fetched_string_array[1]
+
+            for item in location_dct.values():
+                if item != current_location:
+                    filtered_location.append(item)
+
+            for location in filtered_location:
+                drop['menu'].add_command(label=location, command=lambda v=location: clicked.set(v))
+
+        selected_vehicle.trace("w", on_selected_location)
+
         return clicked
 
     def move_button(selected_vehicle, selected_loc):
@@ -130,15 +145,12 @@ def config(window):
         selection = selected_vehicle.get()
         fetched_string_array = selection.split("---")
         vehicle_id = fetched_string_array[0]
-        location_dct = employee.fetch_all_location_info_in_dict()
-        location = find_location_id(location_dct, fetched_string_array[1])
-        time1 = time.time()
-        employee.update_vehicle_charge(vehicle_id, time1, "VACANT", location)
+        location_id = dbFun.get_loc_id(selected_location)
+        employee.move(vehicle_id, location_id)
+        # location_dct = employee.fetch_all_location_info_in_dict()
+        # location = find_location_id(location_dct, fetched_string_array[1])
+        # time1 = time.time()
+        # employee.update_vehicle_charge(vehicle_id, time1, "VACANT", location)
         messagebox.showinfo("Vehicle location changed", "Vehicle moved from " + selection + " to " + selected_location)
-
-    def find_location_id(location_dct, to_match):
-        for key, value in location_dct.items():
-            if value == to_match:
-                return key
 
     load_main_frame()

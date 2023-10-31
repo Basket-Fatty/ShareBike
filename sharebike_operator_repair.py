@@ -87,7 +87,7 @@ def config(window):
         filtered_location = []
         vehicle_dtls = employee.track_vehicle()
         for vehicle_id, vehicle_dtls in vehicle_dtls.items():
-            if vehicle_dtls[2] == 'DAMAGED':
+            if vehicle_dtls[2] == 'BROKEN':
                 total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
                 filtered_location.append(total_info)
         clicked = StringVar(move_vehicle_window)
