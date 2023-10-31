@@ -81,14 +81,18 @@ def view_customer_options():
 
 # rent fuction
 def view_employee_options():
-    import sharebike_operator
-    importlib.reload(sharebike_operator)
+    import sharebike_operator_login
+    login_widow = tk.Toplevel()
+    sharebike_operator_login.config(login_widow)
+    login_widow.deiconify()
 
 
 # return fuction
 def manager_view():
-    import sharebike_manager_generatereport
-    importlib.reload(sharebike_manager_generatereport)
+    import sharebike_manager_login
+    login_widow = tk.Toplevel()
+    sharebike_manager_login.config(login_widow)
+    login_widow.deiconify()
 
 
 # initialization

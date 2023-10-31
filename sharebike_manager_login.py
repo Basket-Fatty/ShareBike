@@ -46,7 +46,7 @@ def config(window):
     label = Label(frame, image=main_logo, bg=bg_color, height=250, width=250)
     label.grid(row=0, column=0, columnspan=2)
 
-    login_lbl = Label(frame, text="Customer Log In", bg=bg_color, fg="white", font=('TkMenuFont', 14))
+    login_lbl = Label(frame, text="Manager Log In", bg=bg_color, fg="white", font=('TkMenuFont', 14))
     login_lbl.grid(row=1, column=0, columnspan=2, pady=40)
 
     # var = StringVar()

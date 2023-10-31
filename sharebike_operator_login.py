@@ -5,6 +5,7 @@ from PIL import ImageTk
 
 import enum_values
 import general
+import sharebike_operator
 
 bg_color = '#363636'
 main_logo = None
@@ -22,6 +23,12 @@ def config(window):
 
         if general.sign_in(enum_values.UserType.OPERATOR.value, email, password):
             messagebox.showinfo("Information", "Log in Successfully!")
+
+            operator_window = Toplevel()
+            sharebike_operator.config(operator_window)
+            window.withdraw()
+            operator_window.deiconify()
+
         else:
             messagebox.showerror("Error", "Email and Password Mismatch")
 
@@ -46,7 +53,7 @@ def config(window):
     label = Label(frame, image=main_logo, bg=bg_color, height=250, width=250)
     label.grid(row=0, column=0, columnspan=2)
 
-    login_lbl = Label(frame, text="Customer Log In", bg=bg_color, fg="white", font=('TkMenuFont', 14))
+    login_lbl = Label(frame, text="Operator Log In", bg=bg_color, fg="white", font=('TkMenuFont', 14))
     login_lbl.grid(row=1, column=0, columnspan=2, pady=40)
 
     # var = StringVar()
