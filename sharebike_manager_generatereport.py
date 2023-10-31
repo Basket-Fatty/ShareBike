@@ -2,6 +2,7 @@ import tkinter as tk
 # using Pillow library for importing images from the system
 from PIL import ImageTk
 import numpy as np
+import time
 import matplotlib.pyplot as plt
 from tkinter import *
 from tkinter import messagebox
@@ -126,7 +127,7 @@ def config(window):
             fg='white',
             activebackground='#000000',
             activeforeground='white',
-            command=generate_graph_stn_vehicles
+            command=lambda: generate_graph_stn_vehicles(start_time_box.get(), end_time_box.get())
         ).place(x=135, y=550)
 
     def generate_vacancy_graph():
@@ -162,10 +163,13 @@ def config(window):
         plt.title("Status of various Vehicles")
         plt.show()
 
-    def generate_graph_stn_vehicles():
+    def generate_graph_stn_vehicles(start_time, end_time):
 
         vehicles_status = {}
-        vehicle_dtls = employee.track_vehicle()
+        start_time_stamp = time.mktime(time.strptime(start_time, "%Y-%m-%d %H:%M"))
+        end_time_stamp = time.mktime(time.strptime(end_time, "%Y-%m-%d %H:%M"))
+        # print (str(start_time_stamp) + "__" + str(end_time_stamp))
+        vehicle_dtls = employee.track_vehicle_with_time(start_time_stamp, end_time_stamp)
         # print (vehicle_dtls)
         for vehicle_id, vehicle_more_infos in vehicle_dtls.items():
             cnt = 0
