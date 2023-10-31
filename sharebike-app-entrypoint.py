@@ -82,8 +82,8 @@ def load_main_frame():
         fg='white',
         width=10,
         activebackground='#000000',
-        activeforeground='white'
-        
+        activeforeground='white',
+        command=lambda: sign_up()
     ).pack(pady=20)
 
 
@@ -110,6 +110,14 @@ def manager_view():
     login_widow = tk.Toplevel()
     sharebike_manager_login.config(login_widow)
     login_widow.deiconify()
+
+
+def sign_up():
+    import sharebike_register
+    register_window = Toplevel()
+    sharebike_register.config(register_window)
+    register_window.deiconify()
+
 
 
 # initialization

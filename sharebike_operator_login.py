@@ -43,12 +43,12 @@ def config(window):
         email_e.delete(0, END)
         password_e.delete(0, END)
 
-    def jump_to_register():
-        import sharebike_register
-        register_window = Toplevel()
-        sharebike_register.config(register_window)
-        window.withdraw()
-        register_window.deiconify()
+    # def jump_to_register():
+    #     import sharebike_register
+    #     register_window = Toplevel()
+    #     sharebike_register.config(register_window)
+    #     window.withdraw()
+    #     register_window.deiconify()
 
     frame = Frame(window, bg=bg_color)
 
@@ -99,7 +99,7 @@ def config(window):
     clear_btn = Button(frame, text="Clear", bg=bg_color, fg="white", width=10, command=clear)
     clear_btn.grid(row=5, column=1, pady=30)
 
-    sign_up_button = Button(frame, text="Create New Account", bg=bg_color, fg="white", command=jump_to_register)
-    sign_up_button.grid(row=7, columnspan=2)
+    # sign_up_button = Button(frame, text="Create New Account", bg=bg_color, fg="white", command=jump_to_register)
+    # sign_up_button.grid(row=7, columnspan=2)
 
     frame.pack()
