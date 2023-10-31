@@ -93,7 +93,7 @@ def config(window, cust_id):
             vehicle_ids = customer.get_local_vehicles(selected_loc_id)
 
             for vehicle_id in vehicle_ids:
-                vehicle_dropdown['menu'].add_command(label="vehicle" + str(vehicle_id),
+                vehicle_dropdown['menu'].add_command(label="vehicle" + str(vehicle_id) + "[" + dbFun.get_type(vehicle_id) + "]",
                                                      command=lambda v=vehicle_id: vehicle_selected_option.set(v))
 
         loc_selected_option.trace("w", on_selected_location)
