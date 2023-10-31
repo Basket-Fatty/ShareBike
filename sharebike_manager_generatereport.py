@@ -4,6 +4,7 @@ from PIL import ImageTk
 import numpy as np
 import matplotlib.pyplot as plt
 from tkinter import *
+from tkinter import messagebox
 
 import manager
 import employee
@@ -93,7 +94,7 @@ def config(window):
             activebackground='#000000',
             activeforeground='white',
             command=lambda: view_report_button(start_time_box, end_time_box)
-        ).place(x=160, y=400)
+        ).place(x=135, y=400)
 
         tk.Button(
             main_frame,
@@ -106,12 +107,35 @@ def config(window):
             command=generate_vacancy_graph
         ).place(x=135, y=450)
 
+        tk.Button(
+            main_frame,
+            text='Generate Full Report',
+            font=("TkHeadingFont", 10),
+            bg='#191919',
+            fg='white',
+            activebackground='#000000',
+            activeforeground='white',
+            command=generate_full_report
+        ).place(x=135, y=500)
+
+        tk.Button(
+            main_frame,
+            text='Generate Graph Stations&Vehicles',
+            font=("TkHeadingFont", 10),
+            bg='#191919',
+            fg='white',
+            activebackground='#000000',
+            activeforeground='white',
+            command=generate_graph_stn_vehicles
+        ).place(x=135, y=550)
+
     def generate_vacancy_graph():
         data = {'VACANT': 20, 'RENTED': 15, 'DAMAGED': 30,
                 'LOPOWER': 35}
 
         vehicles_status = {}
         vehicle_dtls = employee.track_vehicle()
+        # print (vehicle_dtls)
         for vehicle_id, vehicle_more_infos in vehicle_dtls.items():
             cnt = 0
             stat = vehicle_more_infos[2]
@@ -137,6 +161,44 @@ def config(window):
         plt.ylabel("Number of Vehicles")
         plt.title("Status of various Vehicles")
         plt.show()
+
+    def generate_graph_stn_vehicles():
+
+        vehicles_status = {}
+        vehicle_dtls = employee.track_vehicle()
+        # print (vehicle_dtls)
+        for vehicle_id, vehicle_more_infos in vehicle_dtls.items():
+            cnt = 0
+            stat = vehicle_more_infos[3]
+            if stat in vehicles_status:
+                cnt = vehicles_status[stat]
+            if vehicle_more_infos[2] == 'VACANT':
+                cnt = cnt + 1
+                vehicles_status.update({stat: cnt})
+
+        courses = list(vehicles_status.keys())
+        values = list(vehicles_status.values())
+
+        fig = plt.figure(figsize=(10, 5))
+
+        # creating the bar plot
+        plt.bar(courses, values, color='maroon',
+                width=0.4)
+
+        plt.xlabel("Station name")
+        plt.ylabel("Number of Vehicles")
+        plt.title("Status of Vehicles at stations")
+        plt.show()
+
+    def generate_full_report():
+        print("manager report:")
+        data = manager.report_all()
+        for item in data.items():
+            print("vehicle" + str(item[0]))
+            for element in item[1]:
+                print(element)
+            print()
+        messagebox.showinfo("Report Generated", "Please check console for full report")
 
     # view_report_function
     def view_report_button(start_time_box, end_time_box):
@@ -169,9 +231,14 @@ def config(window):
         # integrate with the back end
         start_time = start_time_box.get()
         end_time = end_time_box.get()
-        data = manager.report_period(int(start_time), int(end_time))
-        print(data)
+        data = manager.report_period(start_time, end_time)
+        for item in data.items():
+            print("vehicle" + str(item[0]))
+            for element in item[1]:
+                print(element)
+            print()
 
+        messagebox.showinfo("Report Generated", "Please check console for report")
         # display the data
 
     load_main_frame()
