@@ -16,6 +16,11 @@ def config(window):
     window.title("Customer | Login")
     window.geometry('600x750')
     window.configure(bg=bg_color)
+    width = window.winfo_screenwidth() // 2
+    # would leave a 10% of gap from the top and bottom of the screen
+    height = int(window.winfo_screenheight() * 0.1)
+    # Setting the actual geometry now
+    window.geometry('400x600+' + str(width) + '+' + str(height))
 
     # functions
     def login():
@@ -77,10 +82,10 @@ def config(window):
 
     # details
     email_lbl = Label(frame, text="Email", bg=bg_color, fg="white", )
-    email_lbl.grid(row=3, column=0)
+    email_lbl.grid(row=2, column=0)
 
     email_e = Entry(frame, font=("Arial", 13))
-    email_e.grid(row=3, column=1, pady=20)
+    email_e.grid(row=2, column=1, pady=20)
 
     password_lbl = Label(frame, text="Password ", bg=bg_color, fg="white", )
     password_lbl.grid(row=4, column=0)
@@ -89,13 +94,13 @@ def config(window):
     password_e.grid(row=4, column=1, pady=20)
 
     # buttons
-    login_btn = Button(frame, text="Log In", bg=bg_color, fg="white", command=login)
+    login_btn = Button(frame, text="Log In", bg=bg_color, fg="white", width=10, command=login)
     login_btn.grid(row=5, column=0, pady=30)
 
-    clear_btn = Button(frame, text="Clear", bg=bg_color, fg="white", command=clear)
+    clear_btn = Button(frame, text="Clear", bg=bg_color, fg="white", width=10,command=clear)
     clear_btn.grid(row=5, column=1, pady=30)
 
     sign_up_button = Button(frame, text="Create New Account", bg=bg_color, fg="white", command=jump_to_register)
-    sign_up_button.grid(row=7, columnspan=2)
+    sign_up_button.grid(row=6, columnspan=2)
 
     frame.pack()

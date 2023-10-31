@@ -37,10 +37,11 @@ def load_main_frame():
     # Adding Customer options
     tk.Button(
         main_frame,
-        text='Customer Rent/Return/Pay/Report',
+        text='Customer',
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=20,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: view_customer_options()
@@ -49,10 +50,11 @@ def load_main_frame():
     # Adding Employee option
     tk.Button(
         main_frame,
-        text='Operator Charge/Move/Repair/Track',
+        text='Operator',
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=20,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: view_employee_options()
@@ -61,14 +63,29 @@ def load_main_frame():
     # Adding Manager Options
     tk.Button(
         main_frame,
-        text='Manager Generate Reports',  # test codesnippi
+        text='Manager',  # test codesnippi
         font=("TkHeadingFont", 10),
         bg='#191919',
         fg='white',
+        width=20,
         activebackground='#000000',
         activeforeground='white',
         command=lambda: manager_view()
     ).pack(pady=5)
+
+    # Create new account
+    tk.Button(
+        main_frame,
+        text='SIGN UP',  # test codesnippi
+        font=("TkHeadingFont", 10),
+        bg='#191919',
+        fg='white',
+        width=10,
+        activebackground='#000000',
+        activeforeground='white'
+        
+    ).pack(pady=20)
+
 
 
 # view profile function
@@ -97,7 +114,7 @@ def manager_view():
 
 # initialization
 root = tk.Tk()
-root.title('ShareBike | Home - Customer')
+root.title('ShareBike | Home')
 root.rowconfigure(0, weight=1)
 root.columnconfigure(0, weight=1)
 width = root.winfo_screenwidth() // 2
