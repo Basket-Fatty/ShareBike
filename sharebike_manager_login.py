@@ -5,6 +5,7 @@ from PIL import ImageTk
 
 import enum_values
 import general
+import sharebike_manager_generatereport
 
 bg_color = '#363636'
 main_logo = None
@@ -22,6 +23,12 @@ def config(window):
 
         if general.sign_in(enum_values.UserType.MANAGER.value, email, password):
             messagebox.showinfo("Information", "Log in Successfully!")
+
+            manager_window = Toplevel()
+            sharebike_manager_generatereport.config(manager_window)
+            window.withdraw()
+            manager_window.deiconify()
+
         else:
             messagebox.showerror("Error", "Email and Password Mismatch")
 
