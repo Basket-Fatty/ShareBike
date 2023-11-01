@@ -1,131 +1,135 @@
-# initialize.py
+# Project Name
+The project name is **Share Bike**, it aims for providing a software system to support an electric vehicles sharing programme.
 
-    create the database locally and insert basic test data
-    show some examples of the data structure in the console
+---
 
-# enum_values.py
+# Project Overview
+## Vehicles
+There are two types of vehicles in the system, which is **E-Bike** and **Bike**. The charging policy is a bit different for these two types.
 
-    includes all the enum values,
-    including vehicle status and user type
 
-# general.py
+## Status
+Four statuses are provided to describe the condition of a vehicle, including **VACANT**, **RENTED**, **LOWPOWER** and **BROKEN**.
 
-    when register or sign in, make sure to use enum_values.UserType.USERTYPE.value
+## Location
+The software only supports docked bike sharing programme. An available docking position is described by two fields, which is **station name** and **postcode**.
 
-    register and sign in
-    the register process is different for customer(sign_up),
-    manager(sign_up_inner) and employee(sign_up_inner)
+## Customer
+Customers are able to **rent** and **return** vehicles through the interface provided by the software, the system will automatically calculate the charge according to the time period of their riding, so that they can **pay** their bills later. A customer can also **report** the malfunction of vehicles, including broken parts or ran out of power. Another two features are that they have the access to the database to check their **profile** and their **travel history**.
 
-# customer.py
+## Operator
+Operators are able to **track** all the current vehicles' location and status. They can also make changes like **charging** the battery or **repairing** bike faults. **Moving** vehicles from one place to another is also available.
 
-    when change status of vehicles, make sure to use enum_values.Status.STATUS.value
+## Manager
+A manager has the access to the whole database and the system is able to **generate various forms of reports** to reflect the usage condition.
 
-    rent(vehicle_id, time, location_id, cust_id)---if success return True, else return False
+---
 
-    returnBike(vehicle_id, time, location_id, cust_id)---if success return True, else return False
+# Installation Instruction
+1. Download the code, open the folder with spyder
+2. Run the Initialize.py once to initialize the database and generate simulated data.
+3. Run the sharebike-app-entrypoint.py to activate the user interface
 
-    report(vehicle_id, time, status, location_id)---change the status, use the enum_values.Status.STATUS.value
-    
-    history(cust_id)---get all the travel information of a single customer
-    return a list of series containing all trips of a customer
+![Entry](images/entry.png)
 
-        history(1)[0]---the first travel information of customer1
+---
 
-        trip_id                         1.0
-        vehicle_id                      1.0
-        start_time                     12.0
-        end_time                       15.0
-        charge                          9.0
-        start_station_name    station_name1
-        start_postcode            postcode1
-        end_station_name      station_name3
-        end_postcode              postcode3
+# Usage Guidelines
+## Register
+1. Click **sign up**
+2. Choose register as **customer** or **operator** or **manager**
+3. Enter the information and Click **sign up**
+  
+![Register](images/register.png)
 
-# manager.py
+## Login
+1. Choose login as **customer** or **operator** or **manager**
+2. Enter the **email** and **password** anc click **log in**
 
-    report_single(vehicle_id)---get all the travel information of a single vehicle
-    return a list of series of travel information of a single vehicle
+![Login](images/login.png)
 
-        report_single(1)[0]---the first travel information of vehicle1
+## Customer
+![Customer](images/customer.png)
 
-        info_id                     1
-        time                        1
-        status                 RENTED
-        station_name    station_name1
-        postcode            postcode1
+### View Profile
+Click **view profile**
 
-    report_all()---get all the travel information of all vehicles
-    return a dictonary, the keys are vehilce id, values are lists of series of travel information
+![Profile](images/profile.png)
 
-        report_all()[1][0]---the first travel information of vehicle1
+### Rent
+Select **location** and **vehicle**, click **rent**
 
-        info_id                     1
-        time                        1
-        status                 RENTED
-        station_name    station_name1
-        postcode            postcode1
+![Rent](images/rent.png)
 
-    report_period(start_time, end_time)---get the travel information of all vehicles during a period of time
-    return a dictonary, the keys are vehilce id, values are lists of series of travel information
+### Return
+Select **location**, click **return**
 
-        report_all()[1][0]---the first travel information of vehicle1
+![Return](images/return.png)
 
-        info_id                     1
-        time                        1
-        status                 RENTED
-        station_name    station_name1
-        postcode            postcode1
+### Report
+Select **location**, **vehicle** and **status**, click **report**
 
-# employee.py
+![Report](images/report.png)
 
-    when change status of vehicles, make sure to use enum_values.Status.STATUS.value
+### Pay
+Enter **amount**, click **pay**
 
-    get_locations()---get all the locations
-    return a list of series of information of locations
+![Pay](images/pay.png)
 
-        get_locations()[0]
+### View History
+Click **history**
 
-        location_id                 1
-        station_name    station_name1
-        postcode            postcode1
+![History](images/history.png)
 
-    track()---get all the latest information of all vehicles
-    return a dictionary, keys are vehicle ids, values are a series of information
+## Operator
+![Operator](images/operator.png)
 
-        track()[1]---the latest information of vehicle1
+### Track
+Click **track**
 
-        info_id                     3
-        time                       12
-        status               LOWPOWER
-        station_name    station_name2
-        postcode            postcode2
+![Track](images/track.png)
 
-    track_charge()---get all the latest information of  vehicles which are low power
-    return a dictionary, keys are vehicle ids, values are a series of information
+### Charge
+Select **vehicle**, click **charge**
 
-        track()[1]---the latest information of vehicle1
+![Charge](images/charge.png)
 
-        info_id                     3
-        time                       12
-        status               LOWPOWER
-        station_name    station_name2
-        postcode            postcode2
+### Repair
+Select **vehicle**, click **repair**
 
-    charge(vehicle_id, time, location_id)---if success return True, else return False
+![Repair](images/repair.png)
 
-    track_repair()---get all the latest information of  vehicles which are broken
-    return a dictionary, keys are vehicle ids, values are a series of information
+### Move
+Select **vehicle** and **location**, click **move**
 
-        track()[1]---the latest information of vehicle1
+![Move](images/move.png)
 
-        info_id                     3
-        time                       12
-        status               LOWPOWER
-        station_name    station_name2
-        postcode            postcode2
+## Manager
+![Manager](images/manager.png)
 
-    repair(vehicle_id, time, location_id)---if success return True, else return False
+### Period Report & Full Report
+- Enter the start time and the end time, formated as **%Y-%m-%d %H:%M**, click **generate report** to get the vehicle information during the span, listed as texts in the console
+- Click **generate full report** to get all the vehicle information, listed as texts in the console
 
-    move(vehicle_id, time, location_id)---move vehicles to location_id
+![Report](images/report1.png)
 
-    move_with_name(vehicle_id, time, station_name)---move vehicles to station_name
+### Graph
+Click **generate vehicle graph** to check the number of vehicles under different status
+
+![Graph](images/graph1.png)
+
+### Graph
+Click **generate graph stations & vehicles** to check the number of vehicles in different stations
+
+![Graph](images/graph2.png)
+
+---
+
+# Contributors
+
+We'd like to thank the following contributors who have helped make this project better:
+
+- Anjali Shishupal Gedam
+- Rohit Kumar Dubey
+- Sayonee Dassani
+- Xuzhe Huang
