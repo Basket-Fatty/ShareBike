@@ -1,9 +1,11 @@
+import re
 import tkinter as tk
 # using Pillow library for importing images from the system
 from PIL import ImageTk
 from tkinter import *
 import time
 
+import dbFun
 import employee
 
 # storing not so easy string to remember in a variable so that it can be reusable
@@ -90,7 +92,8 @@ def config(window):
         vehicle_dtls = employee.track_vehicle()
         for vehicle_id, vehicle_dtls in vehicle_dtls.items():
             if vehicle_dtls[2] == 'LOWPOWER':
-                total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
+                total_info = "vehicle" + str(vehicle_id) + "[" + dbFun.get_type(
+                    vehicle_id) + "]" + "---" + dbFun.check_status(vehicle_id) + "---" + vehicle_dtls[3]
                 filtered_location.append(total_info)
         clicked = StringVar(move_vehicle_window)
         if len(filtered_location) < 1:
@@ -105,10 +108,10 @@ def config(window):
     def charge_button(optionbox_selection):
         selected_option = optionbox_selection.get()
         fetched_string_array = selected_option.split("---")
-        vehicle_id = fetched_string_array[0]
+        vehicle_id = re.findall(r'\d+', fetched_string_array[0])[0]
         selected_location = fetched_string_array[0]
         location_dct = employee.fetch_all_location_info_in_dict()
-        location = find_location_id(location_dct, fetched_string_array[1])
+        location = find_location_id(location_dct, fetched_string_array[2])
         time1 = time.time()
         employee.update_vehicle_charge(vehicle_id, time1, "VACANT", location)
         tk.messagebox.showinfo("Vehicle Repaired", "Vehicle " + selected_option + " has  been repaired")

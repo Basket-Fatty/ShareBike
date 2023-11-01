@@ -98,8 +98,7 @@ def create_customer(password, fname, lname, email, phnum, bank_acc_nbr):
     db.close()
 
 
-def create_vehicle(vehicle_type, location_id):
-    time_stamp = time.time()
+def create_vehicle(vehicle_type, location_id, time_stamp=time.time()):
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
         # sql = "INSERT INTO vehicles(vehicle_type) VALUES (%(vehicle_type)s)"

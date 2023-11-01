@@ -20,8 +20,7 @@ location_num = 10
 trip_num = 100
 malfunction_num = 5
 
-start_point = int(time.mktime(time.strptime('2000-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')))
-end_point = int(time.time())
+start_point = int(time.mktime(time.strptime('2020-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')))
 min_riding_time = 1800
 max_riding_time = 7200
 
@@ -39,7 +38,7 @@ for i in range(vehicle_num):
     vehicle_type = random.choice(["E-Bike", "Bike"])
     location_id = random.choice(range(1, location_num+1))
 
-    dbFun.create_vehicle(vehicle_type, location_id)
+    dbFun.create_vehicle(vehicle_type, location_id, start_point)
 
 # create customers
 for i in range(customer_num):
@@ -79,14 +78,15 @@ for i in range(trip_num):
     cust_id = random.choice(range(1, customer_num + 1))
     vehicle_id = random.choice(range(1, vehicle_num+1))
 
-    start_time_stamp = random.randint(start_point, end_point)
     start_location_id = random.choice(range(1, location_num+1))
 
-    end_time_stamp = start_time_stamp + random.randint(min_riding_time, max_riding_time)
+    end_point = start_point + random.randint(min_riding_time, max_riding_time)
     end_location_id = random.choice(range(1, location_num + 1))
 
-    customer.rent(vehicle_id, start_location_id, cust_id, start_time_stamp)
-    customer.returnBike(vehicle_id, end_location_id, cust_id, end_time_stamp)
+    customer.rent(vehicle_id, start_location_id, cust_id, start_point)
+    customer.returnBike(vehicle_id, end_location_id, cust_id, end_point)
+
+    start_point = end_point
 
 # report malfunction
 for i in range(malfunction_num):
@@ -98,6 +98,10 @@ for i in range(malfunction_num):
     location_id = random.choice(range(1, location_num+1))
 
     customer.report(vehicle_id, status, location_id)
+
+for i in range(vehicle_num):
+    if dbFun.check_status(i + 1) != "VACANT":
+        print("vehicle" + str(i + 1) + ": " + dbFun.check_status(i + 1))
 
 # dbFun.create_vehicle("E-Bike", 1)
 # dbFun.create_vehicle("Bike", 2)

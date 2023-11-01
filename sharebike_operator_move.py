@@ -1,3 +1,4 @@
+import re
 import tkinter as tk
 
 from tkinter import messagebox
@@ -128,7 +129,7 @@ def config(window):
             filtered_location.clear()
             selection = selected_vehicle.get()
             fetched_string_array = selection.split("---")
-            current_location = fetched_string_array[1]
+            current_location = fetched_string_array[2]
 
             for item in location_dct.values():
                 if item != current_location:
@@ -145,7 +146,7 @@ def config(window):
         selected_location = selected_loc.get()
         selection = selected_vehicle.get()
         fetched_string_array = selection.split("---")
-        vehicle_id = fetched_string_array[0]
+        vehicle_id = re.findall(r'\d+', fetched_string_array[0])[0]
         location_id = dbFun.get_loc_id(selected_location)
         employee.move(vehicle_id, location_id)
         # location_dct = employee.fetch_all_location_info_in_dict()
