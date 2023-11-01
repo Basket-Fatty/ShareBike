@@ -96,7 +96,8 @@ def config(window):
         vehicle_dtls = employee.track_vehicle()
         for vehicle_id, vehicle_dtls in vehicle_dtls.items():
             if vehicle_dtls[2] == 'VACANT':
-                total_info = str(vehicle_id) + "---" + vehicle_dtls[3]
+                total_info = "vehicle" + str(vehicle_id) + "[" + dbFun.get_type(
+                    vehicle_id) + "]" + "---" + dbFun.check_status(vehicle_id) + "---" + vehicle_dtls[3]
                 filtered_location.append(total_info)
         clicked = StringVar(move_vehicle_window)
         if len(filtered_location) < 1:
@@ -111,7 +112,7 @@ def config(window):
     def populate_dropdown_location(selected_vehicle, move_vehicle_window):
         selection = selected_vehicle.get()
         fetched_string_array = selection.split("---")
-        current_location = fetched_string_array[1]
+        current_location = fetched_string_array[2]
         location_dct = employee.fetch_all_location_info_in_dict()
         filtered_location = []
         for key, value in location_dct.items():
