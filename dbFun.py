@@ -139,8 +139,7 @@ def create_location(station_name, postcode):
     db.close()
 
 
-def insert_vehicleInfo(vehicle_id, status, location_id):
-    time_stamp = time.time()
+def insert_vehicleInfo(vehicle_id, status, location_id, time_stamp=time.time()):
     table_name = "vehicleInfo_" + str(vehicle_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -157,8 +156,7 @@ def insert_vehicleInfo(vehicle_id, status, location_id):
     db.close()
 
 
-def start_trip(cust_id, vehicle_id, start_location_id):
-    start_time_stamp = time.time()
+def start_trip(cust_id, vehicle_id, start_location_id, start_time_stamp):
     table_name = "trip_" + str(cust_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -174,8 +172,7 @@ def start_trip(cust_id, vehicle_id, start_location_id):
     db.close()
 
 
-def end_trip(cust_id, end_location_id, charge):
-    end_time_stamp = time.time()
+def end_trip(cust_id, end_location_id, charge, end_time_stamp):
     table_name = "trip_" + str(cust_id)
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
@@ -294,7 +291,7 @@ def get_balance(cust_id):
 def update_balance(cust_id, balance):
     with sqlite3.connect("ShareBikeDB.db") as db:
         cursor = db.cursor()
-        sql = "UPDATE customers SET balance = \"{}\" WHERE cust_id = \"{}\"".format(balance, cust_id)
+        sql = "UPDATE customers SET balance = \"{}\" WHERE cust_id = \"{}\"".format(round(balance, 2), cust_id)
         cursor.execute(sql)
     db.close()
 

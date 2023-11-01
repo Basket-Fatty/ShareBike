@@ -1,5 +1,6 @@
 from tkinter import *
 
+import dbFun
 import employee
 
 # storing not so easy string to remember in a variable so that it can be reusable
@@ -33,5 +34,6 @@ def config(window):
 def populate_vehicle_status(name_box):
     vehicle_dtls = employee.track_vehicle()
     for vehicle_id, vehicle_dtls in vehicle_dtls.items():
-        total_info = "vehicle" + str(vehicle_id) + "---" + vehicle_dtls[3]
+        total_info = "vehicle" + str(vehicle_id) + "[" + dbFun.get_type(
+                    vehicle_id) + "]" + "---" + dbFun.check_status(vehicle_id) + "---" + vehicle_dtls[3]
         name_box.insert(END, total_info)

@@ -3,43 +3,43 @@ import dbFun
 import enum_values
 import time
 
-charge_policy = {"Bike": 1.0, "E-Bike": 2.0}
+charge_policy = {"Bike": 0.1, "E-Bike": 0.2}
 
 
-def rent(vehicle_id, location_id, cust_id):
+def rent(vehicle_id, location_id, cust_id, start_time_stamp=time.time()):
     status = dbFun.check_status(vehicle_id)
 
     if status == enum_values.Status.VACANT.value:
         # create new vehicleInfo, add it to the table
         status = enum_values.Status.RENTED.value
-        dbFun.insert_vehicleInfo(vehicle_id, status, location_id)
+        dbFun.insert_vehicleInfo(vehicle_id, status, location_id, start_time_stamp)
         # create new trip, add it to the table
-        dbFun.start_trip(cust_id, vehicle_id, location_id)
+        dbFun.start_trip(cust_id, vehicle_id, location_id, start_time_stamp)
 
         return True
     else:
         return False
 
 
-def returnBike(vehicle_id, location_id, cust_id):
+def returnBike(vehicle_id, location_id, cust_id, end_time_stamp=time.time()):
     status = dbFun.check_status(vehicle_id)
 
     if status == enum_values.Status.RENTED.value:
-        start_time = dbFun.get_time(vehicle_id)
-        end_time = time.time()
+        start_time_stamp = dbFun.get_time(vehicle_id)
         vehicle_type = dbFun.get_type(vehicle_id)
 
         # create new vehicleInfo, add it to the table
         status = enum_values.Status.VACANT.value
-        dbFun.insert_vehicleInfo(vehicle_id, status, location_id)
+        dbFun.insert_vehicleInfo(vehicle_id, status, location_id, end_time_stamp)
 
         # calculate the charge
-        charge = round(((end_time - start_time) / 3600) * charge_policy.get(vehicle_type), 2)
-        balance = dbFun.get_balance(cust_id)
+        period = end_time_stamp - start_time_stamp
+        charge = round(period / 1800 * charge_policy.get(vehicle_type), 2)
+        balance = round(dbFun.get_balance(cust_id), 2)
         dbFun.update_balance(cust_id, balance - charge)
 
         # create new trip, add it to the table
-        dbFun.end_trip(cust_id, location_id, charge)
+        dbFun.end_trip(cust_id, location_id, charge, end_time_stamp)
 
         return True
     else:
